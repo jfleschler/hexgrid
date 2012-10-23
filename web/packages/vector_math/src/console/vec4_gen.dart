@@ -83,7 +83,7 @@ class vec4 {
     w = w_;
   }
   /// Constructs a new [vec4] that is initialized with values from [array] starting at [offset].
-  vec4.array(Float32Array array, [int offset=0]) {
+  vec4.array(Float32List array, [int offset=0]) {
     int i = offset;
     x = array[i];
     i++;
@@ -2272,7 +2272,7 @@ class vec4 {
     return this;
   }
   /// Copies [this] into [array] starting at [offset].
-  void copyIntoArray(Float32Array array, [int offset=0]) {
+  void copyIntoArray(Float32List array, [int offset=0]) {
     int i = offset;
     array[i] = x;
     i++;
@@ -2283,9 +2283,9 @@ class vec4 {
     array[i] = w;
     i++;
   }
-  /// Returns a copy of [this] as a [Float32Array].
-  Float32Array copyAsArray() {
-    Float32Array array = new Float32Array(4);
+  /// Returns a copy of [this] as a [Float32List].
+  Float32List copyAsArray() {
+    Float32List array = new Float32List(4);
     int i = 0;
     array[i] = x;
     i++;
@@ -2298,7 +2298,7 @@ class vec4 {
     return array;
   }
   /// Copies elements from [array] into [this] starting at [offset].
-  void copyFromArray(Float32Array array, [int offset=0]) {
+  void copyFromArray(Float32List array, [int offset=0]) {
     int i = offset;
     x = array[i];
     i++;

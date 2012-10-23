@@ -25,29 +25,37 @@
 
 /**
  * Returns an OpenGL look at matrix.
+ * The camera is located at [cameraPosition] and is focused
+ * on [cameraFocusPostion].
+ *
+ * The [upDirection] is almost always (0, 1, 0).
  */
-mat4 makeLookAt(vec3 eyePosition, vec3 lookAtPosition, vec3 upDirection) {
-  vec3 z = eyePosition - lookAtPosition;
+mat4 makeLookAt(vec3 cameraPosition, vec3 cameraFocusPosition, vec3 upDirection) {
+  vec3 z = cameraPosition - cameraFocusPosition;
   z.normalize();
-  vec3 x = z.cross(upDirection);
+
+  vec3 x = upDirection.cross(z);
   x.normalize();
-  vec3 y = x.cross(z);
+
+  vec3 y = z.cross(x);
   y.normalize();
+
   mat4 r = new mat4.zero();
   r[0].xyz = x;
   r[1].xyz = y;
-  r[2].xyz = -z;
+  r[2].xyz = z;
   r[3].w = 1.0;
   r = r.transposed();
-  vec3 rotatedEye = r * -eyePosition;
+  vec3 rotatedEye = r * -cameraPosition;
   r[3].xyz = rotatedEye;
+
   return r;
 }
 
 /**
  * Returns an OpenGL perspective camera projection matrix
  * */
-mat4 makePerspective(num fov_y_radians, num aspect_ratio, num znear, num zfar) {
+mat4 makePerspective(double fov_y_radians, double aspect_ratio, double znear, double zfar) {
   double height = tan(fov_y_radians * 0.5) * znear;
   double width = height * aspect_ratio;
 
@@ -58,10 +66,10 @@ mat4 makePerspective(num fov_y_radians, num aspect_ratio, num znear, num zfar) {
  * Returns an OpenGL frustum camera projection matrix
  */
 mat4 makeFrustum(num left, num right, num bottom, num top, num near, num far) {
-  num two_near = 2.0 * near;
-  num right_minus_left = right - left;
-  num top_minus_bottom = top - bottom;
-  num far_minus_near = far - near;
+  double two_near = 2.0 * near;
+  double right_minus_left = right - left;
+  double top_minus_bottom = top - bottom;
+  double far_minus_near = far - near;
 
   mat4 view = new mat4.zero();
   view[0].x = two_near / right_minus_left;
@@ -82,18 +90,18 @@ mat4 makeFrustum(num left, num right, num bottom, num top, num near, num far) {
 /**
  * Returns an OpenGL orthographic camera projection matrix
  */
-mat4 makeOrthographic(num left, num right, num bottom, num top, num znear, num zfar) {
-  num rml = right - left;
-  num rpl = right + left;
-  num tmb = top - bottom;
-  num tpb = top + bottom;
-  num fmn = zfar - znear;
-  num fpn = zfar + znear;
+mat4 makeOrthographic(double left, double right, double bottom, double top, double znear, double zfar) {
+  double rml = right - left;
+  double rpl = right + left;
+  double tmb = top - bottom;
+  double tpb = top + bottom;
+  double fmn = zfar - znear;
+  double fpn = zfar + znear;
 
   mat4 r = new mat4.zero();
   r[0].x = 2.0/rml;
   r[1].y = 2.0/tmb;
-  r[2].z = 2.0/fmn;
+  r[2].z = -2.0/fmn;
   r[3].x = rpl/rml;
   r[3].y = tpb/tmb;
   r[3].z = fpn/fmn;
@@ -127,7 +135,7 @@ mat4 makePlaneReflection(vec3 planeNormal, vec3 planePoint) {
   outer.scale(2.0);
   mat4 r = new mat4();
   r = r - outer;
-  num scale = 2.0 * dot(planePoint, planeNormal);
+  double scale = 2.0 * dot(planePoint, planeNormal);
   vec3 scaledNormal = (planeNormal * scale);
   vec4 T = new vec4(scaledNormal, 1.0);
   r.col3 = T;

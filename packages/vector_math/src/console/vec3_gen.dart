@@ -74,7 +74,7 @@ class vec3 {
     z = z_;
   }
   /// Constructs a new [vec3] that is initialized with values from [array] starting at [offset].
-  vec3.array(Float32Array array, [int offset=0]) {
+  vec3.array(Float32List array, [int offset=0]) {
     int i = offset;
     x = array[i];
     i++;
@@ -815,7 +815,7 @@ class vec3 {
     return this;
   }
   /// Copies [this] into [array] starting at [offset].
-  void copyIntoArray(Float32Array array, [int offset=0]) {
+  void copyIntoArray(Float32List array, [int offset=0]) {
     int i = offset;
     array[i] = x;
     i++;
@@ -824,9 +824,9 @@ class vec3 {
     array[i] = z;
     i++;
   }
-  /// Returns a copy of [this] as a [Float32Array].
-  Float32Array copyAsArray() {
-    Float32Array array = new Float32Array(3);
+  /// Returns a copy of [this] as a [Float32List].
+  Float32List copyAsArray() {
+    Float32List array = new Float32List(3);
     int i = 0;
     array[i] = x;
     i++;
@@ -837,7 +837,7 @@ class vec3 {
     return array;
   }
   /// Copies elements from [array] into [this] starting at [offset].
-  void copyFromArray(Float32Array array, [int offset=0]) {
+  void copyFromArray(Float32List array, [int offset=0]) {
     int i = offset;
     x = array[i];
     i++;

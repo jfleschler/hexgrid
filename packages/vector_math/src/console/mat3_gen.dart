@@ -710,7 +710,7 @@ class mat3 {
     return transform(out);
   }
   /// Copies [this] into [array] starting at [offset].
-  void copyIntoArray(Float32Array array, [int offset=0]) {
+  void copyIntoArray(Float32List array, [int offset=0]) {
     int i = offset;
     array[i] = col0.x;
     i++;
@@ -731,9 +731,9 @@ class mat3 {
     array[i] = col2.z;
     i++;
   }
-  /// Returns a copy of [this] as a [Float32Array].
-  Float32Array copyAsArray() {
-    Float32Array array = new Float32Array(9);
+  /// Returns a copy of [this] as a [Float32List].
+  Float32List copyAsArray() {
+    Float32List array = new Float32List(9);
     int i = 0;
     array[i] = col0.x;
     i++;
@@ -756,7 +756,7 @@ class mat3 {
     return array;
   }
   /// Copies elements from [array] into [this] starting at [offset].
-  void copyFromArray(Float32Array array, [int offset=0]) {
+  void copyFromArray(Float32List array, [int offset=0]) {
     int i = offset;
     col0.x = array[i];
     i++;

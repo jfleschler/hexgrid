@@ -1,1 +1,1 @@
-{"packages":{"vector_math":{"version":"0.9.0","source":"hosted","description":"vector_math"},"unittest":{"version":"0.0.0-r.13679","source":"sdk","description":"unittest"}}}
+{"packages":{"vector_math":{"version":"0.9.1","source":"git","description":{"url":"https://github.com/johnmccutchan/DartVectorMath.git","ref":null,"resolved-ref":"92b4c93a6b591ec175128f57c32cedce26a41b11"}},"unittest":{"version":"0.0.0-r.13851","source":"sdk","description":"unittest"}}}

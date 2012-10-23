@@ -57,7 +57,7 @@ class vec2 {
     y = y_;
   }
   /// Constructs a new [vec2] that is initialized with values from [array] starting at [offset].
-  vec2.array(Float32Array array, [int offset=0]) {
+  vec2.array(Float32List array, [int offset=0]) {
     int i = offset;
     x = array[i];
     i++;
@@ -360,16 +360,16 @@ class vec2 {
     return this;
   }
   /// Copies [this] into [array] starting at [offset].
-  void copyIntoArray(Float32Array array, [int offset=0]) {
+  void copyIntoArray(Float32List array, [int offset=0]) {
     int i = offset;
     array[i] = x;
     i++;
     array[i] = y;
     i++;
   }
-  /// Returns a copy of [this] as a [Float32Array].
-  Float32Array copyAsArray() {
-    Float32Array array = new Float32Array(2);
+  /// Returns a copy of [this] as a [Float32List].
+  Float32List copyAsArray() {
+    Float32List array = new Float32List(2);
     int i = 0;
     array[i] = x;
     i++;
@@ -378,7 +378,7 @@ class vec2 {
     return array;
   }
   /// Copies elements from [array] into [this] starting at [offset].
-  void copyFromArray(Float32Array array, [int offset=0]) {
+  void copyFromArray(Float32List array, [int offset=0]) {
     int i = offset;
     x = array[i];
     i++;
