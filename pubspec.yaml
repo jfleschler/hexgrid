@@ -1,0 +1,5 @@
+name:  hexgrid
+description:  A sample application
+
+dependencies:
+  vector_math: 0.9.0
