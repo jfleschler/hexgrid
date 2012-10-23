@@ -952,7 +952,7 @@ $$.Hex = {"": ["pos?", "hexID?", "size", "isSelected="],
 }
 };
 
-$$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!", "row?", "col?", "hexSize"],
+$$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!", "shipHealth?", "row?", "col?", "hexSize"],
  "super": "Object",
  moveTo$2: function(_row, _col) {
   this.row = _row;
@@ -1183,6 +1183,24 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
   context.closePath$0();
   context.stroke$0();
   context.restore$0();
+  context.save$0();
+  context.translate$2(x, y);
+  context.set$lineWidth(3);
+  context.set$strokeStyle('black');
+  context.set$fillStyle('black');
+  context.beginPath$0();
+  context.moveTo$2(-10, -9);
+  context.lineTo$2(10, -9);
+  context.closePath$0();
+  context.stroke$0();
+  context.set$lineWidth(2.5);
+  context.set$strokeStyle('green');
+  context.beginPath$0();
+  context.moveTo$2(-10, -9);
+  context.lineTo$2(this.shipHealth / 5 - 10, -9);
+  context.closePath$0();
+  context.stroke$0();
+  context.restore$0();
 },
  isIntersect$1: function(touchPT) {
   var t1 = this.pos;
@@ -1220,10 +1238,14 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
       return false;
   }
 },
+ takeDamage$1: function(dmg) {
+  this.shipHealth = this.shipHealth - dmg;
+},
  Ship$3: function(_row, _col, _hexSize) {
   this.row = _row;
   this.col = _col;
   this.hexSize = _hexSize;
+  this.shipHealth = 100;
   if ($.eqB($.mod(this.col, 2), 1)) {
     var t1 = this.hexSize;
     if (typeof t1 !== 'number')
@@ -3469,6 +3491,13 @@ $.drawMissiles = function(context) {
       }
     }
     t2.draw$1(context);
+    for (t3 = $.iterator($.shipsP1); t3.hasNext$0() === true;) {
+      t4 = t3.next$0();
+      if (t4.isIntersect$1(t2.get$pos()) === true && !$.eqB(t4, $.selectedShip)) {
+        t4.takeDamage$1(20);
+        $.removeAt$1($.missiles, i);
+      }
+    }
     if ($.gtB(t2.get$pos().get$x(), $.canvas.get$width()) || $.ltB(t2.get$pos().get$x(), 0) || $.gtB(t2.get$pos().get$y(), $.add($.canvas.get$height(), 50)) || $.ltB(t2.get$pos().get$y(), -50))
       $.removeAt$1($.missiles, i);
     else
@@ -3533,7 +3562,7 @@ $.shr = function(a, b) {
 };
 
 $.Ship$ = function(_row, _col, _hexSize) {
-  var t1 = new $.Ship(null, null, null, null, null, null, null, null);
+  var t1 = new $.Ship(null, null, null, null, null, null, null, null, null);
   t1.Ship$3(_row, _col, _hexSize);
   return t1;
 };
@@ -3886,8 +3915,15 @@ $.leB = function(a, b) {
 };
 
 $.drawShips = function(context) {
-  for (var t1 = $.iterator($.shipsP1); t1.hasNext$0() === true;)
-    t1.next$0().draw$1(context);
+  for (var t1 = $.iterator($.shipsP1), i = 0; t1.hasNext$0() === true;) {
+    var t2 = t1.next$0();
+    if ($.leB(t2.get$shipHealth(), 0))
+      $.removeAt$1($.shipsP1, i);
+    else {
+      t2.draw$1(context);
+      ++i;
+    }
+  }
 };
 
 $._DOMWindowCrossFrameImpl$ = function(_window) {
