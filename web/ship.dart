@@ -6,6 +6,7 @@ class Ship {
   bool isMoving;
   double destDirection;
   
+  double shipHealth;
   
   num row, col, hexSize;
 //  Ship(vec2 _pos) {
@@ -17,6 +18,8 @@ class Ship {
     row = _row;
     col = _col;
     hexSize = _hexSize;
+    
+    shipHealth = 100.0;
     
     num yOffset;
     if (col % 2 == 1)
@@ -90,6 +93,31 @@ class Ship {
     context.stroke();
     
     context.restore();
+    
+    // health bar
+    context.save();
+    context.translate(x, y);
+    context.lineWidth = 3;
+    context.strokeStyle = "black";
+    context.fillStyle = "black";
+    
+    context.beginPath();
+    context.moveTo(0 -10, -9);
+    context.lineTo(0 + 10, -9);
+    context.closePath();
+    context.stroke();
+    
+    context.lineWidth = 2.5;
+    context.strokeStyle = "green";
+    context.beginPath();
+    context.moveTo(0 -10, -9);
+    context.lineTo(shipHealth / 5.0 - 10.0, -9);
+    context.closePath();
+    context.stroke();
+    
+    
+    context.restore();
+    
   }
   
   bool isIntersect(vec2 touchPT) {
@@ -99,5 +127,9 @@ class Ship {
       return true;
     }
     return false;
+  }
+  
+  void takeDamage(double dmg) {
+    shipHealth -= dmg;
   }
 }

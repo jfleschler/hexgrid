@@ -261,8 +261,14 @@ void drawHex(CanvasRenderingContext2D context) {
 }
 
 void drawShips(CanvasRenderingContext2D context) { 
+  num i = 0;
   for (Ship s in shipsP1) {
-    s.draw(context);
+    if(s.shipHealth <= 0.0) {
+      shipsP1.removeAt(i);
+    } else {    
+      s.draw(context);
+      i++;
+    }
   }
 }
 
@@ -293,6 +299,14 @@ void drawMissiles(CanvasRenderingContext2D context) {
     }
     
     m.draw(context);
+    
+    for (Ship s in shipsP1) {
+      if (s.isIntersect(m.pos) && s != selectedShip) {
+        s.takeDamage(20.0);
+        missiles.removeAt(i);
+      }
+    }
+    
     if (m.pos.x > canvas.width || m.pos.x < 0 || m.pos.y > canvas.height + 50 || m.pos.y < -50) {
       missiles.removeAt(i);
     } else {
