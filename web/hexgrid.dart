@@ -1,9 +1,8 @@
-#library('hexgrid');
+//#library('hexgrid');
 
 #import('dart:html');
 #import('dart:math', prefix:"Math");
 #import('package:vector_math/vector_math_browser.dart');
-
 
 #source("hex.dart");
 #source("ship.dart");
