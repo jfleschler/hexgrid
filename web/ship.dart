@@ -51,7 +51,6 @@ class Ship {
     destPos = new vec2(40 + col * (7*hexSize), 20 + row * (20*hexSize) + yOffset);
     
     destDirection = Math.atan2(destPos.y - pos.y, destPos.x - pos.x);
-    
   }
   
   void draw(CanvasRenderingContext2D context) {
