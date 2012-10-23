@@ -1,1 +1,1 @@
-web: dart main.dart
+web: dart web/hexgrid.dart
