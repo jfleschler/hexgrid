@@ -23,18 +23,18 @@
 */
 
 class quat {
-  double x;
-  double y;
-  double z;
-  double w;
+  num x;
+  num y;
+  num z;
+  num w;
 
   /// Constructs a quaternion using the raw values [x], [y], [z], and [w]
   quat.raw(this.x, this.y, this.z, this.w);
   /**
    *  Constructs a new quaternion. Behaviour depends on the types of arguments:
    *
-   *  +  *([double] x,[double] y,[double] z,[double] w)* Raw values
-   *  +  *([vec3] axis,[double] angle)* Rotation of [angle] degrees around [axis]
+   *  +  *([num] x,[num] y,[num] z,[num] w)* Raw values
+   *  +  *([vec3] axis,[num] angle)* Rotation of [angle] degrees around [axis]
    *  +  *([quat] other)* Copy of other
    *  +  *([mat3])* Convert rotation matrix into quaternion
    *
@@ -46,7 +46,7 @@ class quat {
     z = 0.0;
     w = 1.0;
 
-    if (a is double && b is double && c is double && d is double) {
+    if (a is num && b is num && c is num && d is num) {
       x = a;
       y = b;
       z = c;
@@ -54,7 +54,7 @@ class quat {
       return;
     }
 
-    if (a is vec3 && b is double) {
+    if (a is vec3 && b is num) {
       setAxisAngle(a, b);
       return;
     }
@@ -76,9 +76,9 @@ class quat {
     }
 
     if (a is mat3) {
-      double trace = a.trace();
+      num trace = a.trace();
       if (trace > 0.0) {
-        double s = Math.sqrt(trace + 1.0);
+        num s = Math.sqrt(trace + 1.0);
         w = s * 0.5;
         s = 0.5 / s;
         x = (a.col1.z - a.col2.y) * s;
@@ -89,7 +89,7 @@ class quat {
         int j = (i + 1) % 3;
         int k = (i + 2) % 3;
 
-        double s = Math.sqrt(a[i][i] - a[j][j] - a[k][k] + 1.0);
+        num s = Math.sqrt(a[i][i] - a[j][j] - a[k][k] + 1.0);
         this[i] = s * 0.5;
         s = 0.5 / s;
         this[3] = (a[j][k] - a[k][j]) * s;
@@ -100,7 +100,7 @@ class quat {
   }
 
   /// Constructs a new quaternion representing a rotation of [angle] around [axis]
-  quat.axisAngle(vec3 axis, double angle) {
+  quat.axisAngle(vec3 axis, num angle) {
     setAxisAngle(axis, angle);
   }
 
@@ -116,15 +116,15 @@ class quat {
   quat.random(Math.Random rn) {
   // From: "Uniform Random Rotations", Ken Shoemake, Graphics Gems III,
   //       pg. 124-132
-    double x0 = rn.nextDouble();
-    double r1 = Math.sqrt(1.0 - x0);
-    double r2 = Math.sqrt(x0);
-    double t1 = Math.PI*2.0 * rn.nextDouble();
-    double t2 = Math.PI*2.0 * rn.nextDouble();
-    double c1 = Math.cos(t1);
-    double s1 = Math.sin(t1);
-    double c2 = Math.cos(t2);
-    double s2 = Math.sin(t2);
+    num x0 = rn.nextDouble();
+    num r1 = Math.sqrt(1.0 - x0);
+    num r2 = Math.sqrt(x0);
+    num t1 = Math.PI*2.0 * rn.nextDouble();
+    num t2 = Math.PI*2.0 * rn.nextDouble();
+    num c1 = Math.cos(t1);
+    num s1 = Math.sin(t1);
+    num c2 = Math.cos(t2);
+    num s2 = Math.sin(t2);
     x = s1 * r1;
     y = c1 * r1;
     z = s2 * r2;
@@ -151,11 +151,6 @@ class quat {
     w *= 0.5;
   }
 
-  /// Returns a new copy of this
-  quat clone() {
-    return new quat.copy(this);
-  }
-
   /// Copy [source] into [this]
   void copyFrom(quat source) {
     x = source.x;
@@ -171,12 +166,12 @@ class quat {
     target.w = w;
   }
   /** Set quaternion with rotation of [radians] around [axis] */
-  void setAxisAngle(vec3 axis, double radians) {
-    double len = axis.length;
+  void setAxisAngle(vec3 axis, num radians) {
+    num len = axis.length;
     if (len == 0.0) {
       return;
     }
-    double halfSin = sin(radians * 0.5) / len;
+    num halfSin = sin(radians * 0.5) / len;
     x = axis.x * halfSin;
     y = axis.y * halfSin;
     z = axis.z * halfSin;
@@ -184,16 +179,16 @@ class quat {
   }
 
   /** Set quaternion with rotation of [yaw], [pitch] and [roll] */
-  void setEuler(double yaw, double pitch, double roll) {
-    double halfYaw = yaw * 0.5;
-    double halfPitch = pitch * 0.5;
-    double halfRoll = roll * 0.5;
-    double cosYaw = Math.cos(halfYaw);
-    double sinYaw = Math.sin(halfYaw);
-    double cosPitch = Math.cos(halfPitch);
-    double sinPitch = Math.sin(halfPitch);
-    double cosRoll = Math.cos(halfRoll);
-    double sinRoll = Math.sin(halfRoll);
+  void setEuler(num yaw, num pitch, num roll) {
+    num halfYaw = yaw * 0.5;
+    num halfPitch = pitch * 0.5;
+    num halfRoll = roll * 0.5;
+    num cosYaw = Math.cos(halfYaw);
+    num sinYaw = Math.sin(halfYaw);
+    num cosPitch = Math.cos(halfPitch);
+    num sinPitch = Math.sin(halfPitch);
+    num cosRoll = Math.cos(halfRoll);
+    num sinRoll = Math.sin(halfRoll);
     x = cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw;
     y = cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw;
     z = sinRoll * cosPitch * cosYaw - cosRoll * sinPitch * sinYaw;
@@ -202,7 +197,7 @@ class quat {
 
   /** Normalize [this] */
   quat normalize() {
-    double l = length;
+    num l = length;
     if (l == 0.0) {
       return this;
     }
@@ -224,7 +219,7 @@ class quat {
 
   /** Invert [this]  */
   quat inverse() {
-    double l = 1.0 / length2;
+    num l = 1.0 / length2;
     x = -x * l;
     y = -y * l;
     z = -z * l;
@@ -257,23 +252,23 @@ class quat {
   }
 
   /** Radians of rotation */
-  double get radians() {
+  num get radians() {
     return 2.0 * acos(w);
   }
 
   /** Axis of rotation */
   vec3 get axis() {
-      double divisor = 1.0 - (w*w);
+      num divisor = 1.0 - (w*w);
       return new vec3(x / divisor, y / divisor, z / divisor);
   }
 
   /** Squared length */
-  double get length2() {
+  num get length2() {
     return (x*x) + (y*y) + (z*z) + (w*w);
   }
 
   /** Length */
-  double get length() {
+  num get length() {
     return Math.sqrt(length2);
   }
 
@@ -308,7 +303,7 @@ class quat {
   }
 
   /** Return a copy of [this] divided by [scale] */
-  quat operator/(double scale) {
+  quat operator/(num scale) {
     return new quat(x / scale, y / scale, z / scale, w / scale);
   }
 
@@ -316,7 +311,7 @@ class quat {
     *  Returns copy of [this] rotated by [otherQuat]
     */
   quat operator*(Dynamic other) {
-    if (other is double) {
+    if (other is num) {
       return new quat(x * other, y * other, z * other, w * other);
     }
     if (other is quat) {
@@ -343,7 +338,7 @@ class quat {
   }
 
   /** Treats [this] as an array and returns [x],[y],[z], or [w] */
-  double operator[](int i) {
+  num operator[](int i) {
     assert(i >= 0 && i < 4);
     switch (i) {
     case 0: return x;
@@ -355,7 +350,7 @@ class quat {
   }
 
   /** Treats [this] as an array and assigns [x],[y],[z], or [w] the value of [arg]*/
-  void operator[]=(int i, double arg) {
+  void operator[]=(int i, num arg) {
     assert(i >= 0 && i < 4);
     switch (i) {
     case 0: x = arg; break;
@@ -367,25 +362,25 @@ class quat {
 
   /** Returns a rotation matrix containing the same rotation as [this] */
   mat3 asRotationMatrix() {
-    double d = length2;
+    num d = length2;
     assert(d != 0.0);
-    double s = 2.0 / d;
+    num s = 2.0 / d;
 
-    double xs = x * s;
-    double ys = y * s;
-    double zs = z * s;
+    num xs = x * s;
+    num ys = y * s;
+    num zs = z * s;
 
-    double wx = w * xs;
-    double wy = w * ys;
-    double wz = w * zs;
+    num wx = w * xs;
+    num wy = w * ys;
+    num wz = w * zs;
 
-    double xx = x * xs;
-    double xy = x * ys;
-    double xz = x * zs;
+    num xx = x * xs;
+    num xy = x * ys;
+    num xz = x * zs;
 
-    double yy = y * ys;
-    double yz = y * zs;
-    double zz = z * zs;
+    num yy = y * ys;
+    num yz = y * zs;
+    num zz = z * zs;
 
     return new mat3.raw(1.0 - (yy + zz), xy + wz, xz - wy, // column 0
       xy - wz, 1.0 - (xx + zz), yz + wx, // column 1
@@ -399,18 +394,18 @@ class quat {
   }
 
   /** Returns relative error between [this]  and [correct] */
-  double relativeError(quat correct) {
-    quat diff = correct - this;
-    double norm_diff = diff.length;
-    double correct_norm = correct.length;
+  num relativeError(quat correct) {
+    num this_norm = length;
+    num correct_norm = correct.length;
+    num norm_diff = (this_norm - correct_norm).abs();
     return norm_diff/correct_norm;
   }
 
   /** Returns absolute error between [this] and [correct] */
-  double absoluteError(quat correct) {
-    double this_norm = length;
-    double correct_norm = correct.length;
-    double norm_diff = (this_norm - correct_norm).abs();
+  num absoluteError(quat correct) {
+    num this_norm = length;
+    num correct_norm = correct.length;
+    num norm_diff = (this_norm - correct_norm).abs();
     return norm_diff;
   }
 }

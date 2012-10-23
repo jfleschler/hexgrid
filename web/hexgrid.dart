@@ -273,8 +273,8 @@ void drawMissiles(CanvasRenderingContext2D context) {
       vec2 dist = p.pos - m.pos;
 
       if (dist.length <= p.bodySize) {
-        m.velocity.x = 0;
-        m.velocity.y = 0;
+        m.velocity.x = 0.0;
+        m.velocity.y = 0.0;
       } else if (dist.length <= p.bodySize * 5) {
       
         num force = 750 / dist.length2;

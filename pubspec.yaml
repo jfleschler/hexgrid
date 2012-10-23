@@ -2,5 +2,4 @@ name:  hexgrid
 description:  A sample application
 
 dependencies:
-  vector_math:
-    git: https://github.com/johnmccutchan/DartVectorMath.git
+  vector_math: 0.9.0
