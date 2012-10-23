@@ -1,14 +1,14 @@
-library hexgrid;
+#library('hexgrid');
 
-import 'dart:html';
+#import('dart:html');
+#import('dart:math', prefix:"Math");
+#import('package:vector_math/vector_math_browser.dart');
 
-import 'package:vector_math/vector_math_browser.dart';
-import 'dart:math' as Math;
 
-import 'hex.dart';
-import 'ship.dart';
-import 'planetarybody.dart';
-import 'missile.dart';
+#source("hex.dart");
+#source("ship.dart");
+#source("planetarybody.dart");
+#source("missile.dart");
 
 //Variables
 CanvasElement canvas;
@@ -306,8 +306,8 @@ void drawShootPath(double _angle, double _speed, vec2 pos, CanvasRenderingContex
   double g = 0.0;
 
   double deltaTime = 10.0/60.0;
-  double vx = cos(_angle) * _speed - g * deltaTime;
-  double vy = sin(_angle) * _speed - g * deltaTime; 
+  double vx = Math.cos(_angle) * _speed - g * deltaTime;
+  double vy = Math.sin(_angle) * _speed - g * deltaTime; 
 
   num x = pos.x;
   num y = pos.y;

@@ -1,8 +1,3 @@
-library hexgrid;
-
-import 'dart:html';
-import 'package:vector_math/vector_math_browser.dart';
-import 'dart:math' as Math;
 
 class PlanetaryBody {
   final String name;
