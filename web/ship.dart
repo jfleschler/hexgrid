@@ -10,7 +10,7 @@ class Ship {
   vec2 destPos;
   bool isSelected;
   bool isMoving;
-  double direction, destDirection;
+  double destDirection;
   
   
   num row, col, hexSize;
