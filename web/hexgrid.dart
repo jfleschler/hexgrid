@@ -9,6 +9,7 @@
 #source("planetarybody.dart");
 #source("missile.dart");
 #source("card.dart");
+#source("asteroid.dart");
 
 //Variables
 CanvasElement canvas;
@@ -25,8 +26,11 @@ List<List<Hex>> hexesP2;
 List<Ship> shipsP1;
 List<Ship> shipsP2;
 List<PlanetaryBody> planets;
+List<Asteroid> asteroids;
 List<Missile> missiles;
 List<Card> cardDeck;
+
+
 
 Ship selectedShip;
 Card selectedCard;
@@ -44,6 +48,7 @@ void main() {
   shipsP1 = [];
   shipsP2 = [];
   planets = [];
+  asteroids = [];
   missiles = [];
   cardDeck = [];
   
@@ -97,6 +102,14 @@ void main() {
     
     vec2 pt = new vec2(newX, newY);
     planets.add(new PlanetaryBody("Sun", "#ff2", random.nextInt(20), pt));
+  }
+  
+  for(num i = 0; i < random.nextInt(7) + 1; i++){
+    num newX = (maxX - minX) * random.nextDouble() + minX;
+    num newY = canvas.height * random.nextDouble();
+    
+    vec2 pt = new vec2(newX, newY);
+    asteroids.add(new Asteroid(pt, random.nextInt(2)));
   }
   
   
@@ -341,10 +354,30 @@ void draw(int time) {
   
   drawBackground(deckContext);
   drawCardDeck(deckContext);
+  
   requestRedraw();
 }
 
 void drawPlanets(CanvasRenderingContext2D context) {
+  for (Asteroid a in asteroids) {
+    a.draw(context);
+    
+    for (Asteroid a2 in asteroids) {
+      vec2 dist = a2.pos- a.pos;
+      if (a != a2 && dist.length <= a.bodySize + a2.bodySize) {
+        a2.vel = a.vel * new vec2(2,2);
+      }
+    }
+    
+    for (Ship s in shipsP1) {
+      if (s.isIntersect(a.pos))
+        s.takeDamage(100.0);
+    }
+    for (Ship s in shipsP2) {
+      if (s.isIntersect(a.pos))
+        s.takeDamage(100.0);
+    }
+  }
   for (PlanetaryBody p in planets) {
     p.draw(context);
   }
@@ -418,6 +451,14 @@ void drawMissiles(CanvasRenderingContext2D context) {
     }
     
     m.draw(context);
+    
+    for (Asteroid a in asteroids) {
+      if (a.isIntersect(m.pos)) {
+        missiles.removeAt(i);
+        a.vel += m.velocity.normalize();
+        
+      }
+    }
     
     for (Ship s in shipsP1) {
       if (s.isIntersect(m.pos) && s != selectedShip) {

@@ -1551,6 +1551,126 @@ $$.Card = {"": ["pos?", "isSelected=", "cardType?"],
 }
 };
 
+$$.Asteroid = {"": ["pos?", "vel=", "bodySize?"],
+ "super": "Object",
+ normalizePlanetSize$1: function(r) {
+  return $.mul($.log($.add(r, 1), null), 10);
+},
+ draw$1: function(context) {
+  var t1 = this.vel;
+  if (typeof t1 !== 'number')
+    return this.draw$1$bailout(1, context, t1, 0);
+  var t3 = $.vec2$(0.99, 0.99);
+  if (typeof t3 !== 'number')
+    throw $.iae(t3);
+  this.vel = t1 * t3;
+  var t4 = this.pos;
+  if (typeof t4 !== 'number')
+    return this.draw$1$bailout(2, context, t4, 0);
+  var t6 = this.vel;
+  if (typeof t6 !== 'number')
+    return this.draw$1$bailout(3, context, t4, t6);
+  this.pos = t4 + t6;
+  this.drawSelf$2(context, this.pos);
+},
+ draw$1$bailout: function(state0, env0, env1, env2) {
+  switch (state0) {
+    case 1:
+      var context = env0;
+      t1 = env1;
+      break;
+    case 2:
+      context = env0;
+      t3 = env1;
+      break;
+    case 3:
+      context = env0;
+      t3 = env1;
+      t5 = env2;
+      break;
+  }
+  switch (state0) {
+    case 0:
+      var t1 = this.vel;
+    case 1:
+      state0 = 0;
+      this.vel = $.mul(t1, $.vec2$(0.99, 0.99));
+      var t3 = this.pos;
+    case 2:
+      state0 = 0;
+      var t5 = this.vel;
+    case 3:
+      state0 = 0;
+      this.pos = $.add(t3, t5);
+      this.drawSelf$2(context, this.pos);
+  }
+},
+ drawSelf$2: function(context, pos) {
+  context.save$0();
+  context.translate$2(pos.get$x(), pos.get$y());
+  context.set$lineWidth(1);
+  context.set$fillStyle('gray');
+  context.set$strokeStyle('black');
+  context.beginPath$0();
+  context.arc$6(0, 0, this.bodySize, 0, 6.283185307179586, false);
+  context.fill$0();
+  context.closePath$0();
+  context.stroke$0();
+  context.restore$0();
+},
+ isIntersect$1: function(touchPT) {
+  var t1 = this.pos;
+  if (typeof t1 !== 'number')
+    return this.isIntersect$1$bailout(1, touchPT, t1);
+  if (typeof touchPT !== 'number')
+    throw $.iae(touchPT);
+  var t2 = $.get$length(t1 - touchPT);
+  if (typeof t2 !== 'number')
+    return this.isIntersect$1$bailout(2, t2, 0);
+  var t4 = this.bodySize;
+  if (typeof t4 !== 'number')
+    return this.isIntersect$1$bailout(3, t2, t4);
+  if (t2 <= t4)
+    return true;
+  return false;
+},
+ isIntersect$1$bailout: function(state0, env0, env1) {
+  switch (state0) {
+    case 1:
+      var touchPT = env0;
+      t1 = env1;
+      break;
+    case 2:
+      t2 = env0;
+      break;
+    case 3:
+      t2 = env0;
+      t4 = env1;
+      break;
+  }
+  switch (state0) {
+    case 0:
+      var t1 = this.pos;
+    case 1:
+      state0 = 0;
+      var t2 = $.get$length($.sub(t1, touchPT));
+    case 2:
+      state0 = 0;
+      var t4 = this.bodySize;
+    case 3:
+      state0 = 0;
+      if ($.leB(t2, t4))
+        return true;
+      return false;
+  }
+},
+ Asteroid$2: function(_pos, _bodySize) {
+  this.pos = _pos;
+  this.bodySize = this.normalizePlanetSize$1(_bodySize);
+  this.vel = $.vec2$(0, 0);
+}
+};
+
 $$._AbstractWorkerEventsImpl = {"": ["_ptr"],
  "super": "_EventsImpl"
 };
@@ -3671,6 +3791,13 @@ $.drawMissiles = function(context) {
       }
     }
     t2.draw$1(context);
+    for (t3 = $.iterator($.asteroids); t3.hasNext$0() === true;) {
+      t4 = t3.next$0();
+      if (t4.isIntersect$1(t2.get$pos()) === true) {
+        $.removeAt$1($.missiles, i);
+        t4.set$vel($.add(t4.get$vel(), t2.get$velocity().normalize$0()));
+      }
+    }
     for (t3 = $.iterator($.shipsP1); t3.hasNext$0() === true;) {
       t4 = t3.next$0();
       if (t4.isIntersect$1(t2.get$pos()) === true && !$.eqB(t4, $.selectedShip)) {
@@ -3806,6 +3933,12 @@ $._maybeScheduleMeasurementFrame = function() {
   if ($._measurementScheduler == null)
     $._measurementScheduler = $._MeasurementScheduler__MeasurementScheduler$best($._completeMeasurementFutures);
   $._measurementScheduler.maybeSchedule$0();
+};
+
+$.Asteroid$ = function(_pos, _bodySize) {
+  var t1 = new $.Asteroid(null, null, null);
+  t1.Asteroid$2(_pos, _bodySize);
+  return t1;
 };
 
 $.buildDynamicMetadata = function(inputTable) {
@@ -3955,7 +4088,27 @@ $._convertNativeToDart_IDBAny = function(object) {
 };
 
 $.drawPlanets = function(context) {
-  for (var t1 = $.iterator($.planets); t1.hasNext$0() === true;)
+  for (var t1 = $.iterator($.asteroids); t1.hasNext$0() === true;) {
+    var t2 = t1.next$0();
+    t2.draw$1(context);
+    for (var t3 = $.iterator($.asteroids); t3.hasNext$0() === true;) {
+      var t4 = t3.next$0();
+      var dist = $.sub(t4.get$pos(), t2.get$pos());
+      if (!$.eqB(t2, t4) && $.leB($.get$length(dist), $.add(t2.get$bodySize(), t4.get$bodySize())))
+        t4.set$vel($.mul(t2.get$vel(), $.vec2$(2, 2)));
+    }
+    for (t3 = $.iterator($.shipsP1); t3.hasNext$0() === true;) {
+      t4 = t3.next$0();
+      if (t4.isIntersect$1(t2.get$pos()) === true)
+        t4.takeDamage$1(100);
+    }
+    for (t3 = $.iterator($.shipsP2); t3.hasNext$0() === true;) {
+      t4 = t3.next$0();
+      if (t4.isIntersect$1(t2.get$pos()) === true)
+        t4.takeDamage$1(100);
+    }
+  }
+  for (t1 = $.iterator($.planets); t1.hasNext$0() === true;)
     t1.next$0().draw$1(context);
 };
 
@@ -4348,6 +4501,7 @@ $.main = function() {
   $.shipsP1 = [];
   $.shipsP2 = [];
   $.planets = [];
+  $.asteroids = [];
   $.missiles = [];
   $.cardDeck = [];
   $.isAttacking = false;
@@ -4394,6 +4548,13 @@ $.main = function() {
     var pt = $.vec2$(t1 * t2 + minX, $.mul($.canvas.get$height(), random0.nextDouble$0()));
     $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random0.nextInt$1(20), pt));
   }
+  for (i = 0; $.ltB(i, $.add(random0.nextInt$1(7), 1)); ++i) {
+    t2 = random0.nextDouble$0();
+    if (typeof t2 !== 'number')
+      throw $.iae(t2);
+    pt = $.vec2$(t1 * t2 + minX, $.mul($.canvas.get$height(), random0.nextDouble$0()));
+    $.add$1($.asteroids, $.Asteroid$(pt, random0.nextInt$1(2)));
+  }
   $.add$1($.cardDeck, $.Card$('ship'));
   $.add$1($.cardDeck, $.Card$('ship'));
   $.add$1($.cardDeck, $.Card$('ship'));
@@ -4434,12 +4595,6 @@ $.IllegalArgumentException$ = function(argument) {
   return new $.IllegalArgumentException(argument);
 };
 
-$._MutationObserverScheduler$ = function(callback) {
-  var t1 = new $._MutationObserverScheduler(null, null, false, callback);
-  t1._MutationObserverScheduler$1(callback);
-  return t1;
-};
-
 $._MediaElementEventsImpl$ = function(_ptr) {
   return new $._MediaElementEventsImpl(_ptr);
 };
@@ -4458,6 +4613,12 @@ $.propertyTypeCastError = function(value, property) {
 
 $.FutureImpl$ = function() {
   return new $.FutureImpl(false, null, null, null, false, [], [], []);
+};
+
+$._MutationObserverScheduler$ = function(callback) {
+  var t1 = new $._MutationObserverScheduler(null, null, false, callback);
+  t1._MutationObserverScheduler$1(callback);
+  return t1;
 };
 
 $.iae = function(argument) {
@@ -4697,16 +4858,6 @@ $.index$slow = function(a, index) {
   return a.operator$index$1(index);
 };
 
-$.removeLast = function(receiver) {
-  if ($.isJsArray(receiver)) {
-    $.checkGrowable(receiver, 'removeLast');
-    if ($.eqB($.get$length(receiver), 0))
-      throw $.$$throw($.IndexOutOfRangeException$(-1));
-    return receiver.pop();
-  }
-  return receiver.removeLast$0();
-};
-
 $.toString = function(value) {
   if (typeof value == "object" && value !== null)
     if ($.isJsArray(value))
@@ -4720,6 +4871,23 @@ $.toString = function(value) {
   if (typeof value == "function")
     return 'Closure';
   return String(value);
+};
+
+$.addLast = function(receiver, value) {
+  if (!$.isJsArray(receiver))
+    return receiver.addLast$1(value);
+  $.checkGrowable(receiver, 'addLast');
+  receiver.push(value);
+};
+
+$.removeLast = function(receiver) {
+  if ($.isJsArray(receiver)) {
+    $.checkGrowable(receiver, 'removeLast');
+    if ($.eqB($.get$length(receiver), 0))
+      throw $.$$throw($.IndexOutOfRangeException$(-1));
+    return receiver.pop();
+  }
+  return receiver.removeLast$0();
 };
 
 $.propertyTypeCast = function(value, property) {
@@ -4882,13 +5050,6 @@ $.Collections_collectionToString = function(c) {
   var result = $.StringBuffer_StringBuffer('');
   $.Collections__emitCollection(c, result, $.ListImplementation_List(null));
   return $.toString(result);
-};
-
-$.addLast = function(receiver, value) {
-  if (!$.isJsArray(receiver))
-    return receiver.addLast$1(value);
-  $.checkGrowable(receiver, 'addLast');
-  receiver.push(value);
 };
 
 $.KeyValuePair$ = function(key, value) {
@@ -5520,6 +5681,10 @@ $.main$bailout = function(state0, minX) {
     var pt = $.vec2$($.add($.mul($.sub(maxX, minX), random0.nextDouble$0()), minX), $.mul($.canvas.get$height(), random0.nextDouble$0()));
     $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random0.nextInt$1(20), pt));
   }
+  for (i = 0; $.ltB(i, $.add(random0.nextInt$1(7), 1)); ++i) {
+    pt = $.vec2$($.add($.mul($.sub(maxX, minX), random0.nextDouble$0()), minX), $.mul($.canvas.get$height(), random0.nextDouble$0()));
+    $.add$1($.asteroids, $.Asteroid$(pt, random0.nextInt$1(2)));
+  }
   $.add$1($.cardDeck, $.Card$('ship'));
   $.add$1($.cardDeck, $.Card$('ship'));
   $.add$1($.cardDeck, $.Card$('ship'));
@@ -5770,21 +5935,21 @@ $.CTC38 = 'IDBKey containing Date';
 $.CTC16 = new Isolate.$isolateProperties.NotImplementedException('IDBKey containing Date');
 $.CTC39 = 'structured clone of File';
 $.CTC6 = new Isolate.$isolateProperties.NotImplementedException('structured clone of File');
-$.CTC40 = 0;
-$.CTC41 = new Isolate.$isolateProperties._SimpleClientRect(0, 0, 0, 0);
-$.CTC20 = new Isolate.$isolateProperties.EmptyElementRect(Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC1);
-$.CTC42 = 'structured clone of RegExp';
+$.CTC40 = 'structured clone of RegExp';
 $.CTC5 = new Isolate.$isolateProperties.NotImplementedException('structured clone of RegExp');
-$.CTC43 = 'Cannot removeLast on immutable List.';
+$.CTC41 = 'Cannot removeLast on immutable List.';
 $.CTC3 = new Isolate.$isolateProperties.UnsupportedOperationException('Cannot removeLast on immutable List.');
-$.CTC44 = 'structured clone of Date';
+$.CTC42 = 'structured clone of Date';
 $.CTC4 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Date');
+$.CTC43 = 0;
+$.CTC44 = new Isolate.$isolateProperties._SimpleClientRect(0, 0, 0, 0);
+$.CTC20 = new Isolate.$isolateProperties.EmptyElementRect(Isolate.$isolateProperties.CTC44, Isolate.$isolateProperties.CTC44, Isolate.$isolateProperties.CTC44, Isolate.$isolateProperties.CTC44, Isolate.$isolateProperties.CTC1);
 $.CTC45 = 'structured clone of ArrayBuffer';
 $.CTC9 = new Isolate.$isolateProperties.NotImplementedException('structured clone of ArrayBuffer');
-$.CTC21 = new Isolate.$isolateProperties._Random();
 $.CTC18 = new Isolate.$isolateProperties.IllegalAccessException();
 $.CTC46 = 'structured clone of Blob';
 $.CTC7 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Blob');
+$.CTC21 = new Isolate.$isolateProperties._Random();
 $.CTC47 = null;
 $.CTC0 = new Isolate.$isolateProperties.NullPointerException(null, Isolate.$isolateProperties.CTC1);
 $.CTC2 = new Isolate.$isolateProperties.NoMoreElementsException();
@@ -5795,6 +5960,7 @@ $.attackVector = null;
 $._pendingRequests = null;
 $.shipsP2 = null;
 $.HashMapImplementation__INITIAL_CAPACITY = 8;
+$.asteroids = null;
 $.hexesP2 = null;
 $.PI = 3.141592653589793;
 $.selectedShip = null;
