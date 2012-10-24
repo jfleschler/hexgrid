@@ -20,6 +20,14 @@ p {
   background-color: #fff;
 }
 
+#deck {
+  width: 1000px;
+  height: 50px;
+  position: relative;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
 #text {
   font-size: 24pt;
   text-align: center;

@@ -32,14 +32,6 @@ $$.FutureImpl = {"": ["_isComplete", "_lib0_value?", "_exception", "_stackTrace"
  get$hasValue: function() {
   return this.get$isComplete() === true && this._exception == null;
 },
- then$1: function(onSuccess) {
-  if (this.get$hasValue() === true)
-    onSuccess.call$1(this.get$value());
-  else if (this.get$isComplete() !== true)
-    this._successListeners.push(onSuccess);
-  else if (!this._exceptionHandled)
-    throw $.$$throw(this._exception);
-},
  _complete$0: function() {
   this._isComplete = true;
   try {
@@ -123,7 +115,7 @@ $$.HashMapImplementation = {"": ["_keys", "_values", "_loadLimit", "_numberOfEnt
       return insertionIndex;
     } else if ($.eqB(existingKey, key))
       return hash;
-    else if (insertionIndex < 0 && $.CTC13 === existingKey)
+    else if (insertionIndex < 0 && $.CTC14 === existingKey)
       insertionIndex = hash;
     var numberOfProbes0 = numberOfProbes + 1;
     hash = $.HashMapImplementation__nextProbe(hash, numberOfProbes, this._keys.length);
@@ -174,7 +166,7 @@ $$.HashMapImplementation = {"": ["_keys", "_values", "_loadLimit", "_numberOfEnt
                 return insertionIndex;
               } else if ($.eqB(existingKey, key))
                 return hash;
-              else if (insertionIndex < 0 && $.CTC13 === existingKey)
+              else if (insertionIndex < 0 && $.CTC14 === existingKey)
                 insertionIndex = hash;
               var numberOfProbes0 = numberOfProbes + 1;
               hash = $.HashMapImplementation__nextProbe(hash, numberOfProbes, this._keys.length);
@@ -248,7 +240,7 @@ $$.HashMapImplementation = {"": ["_keys", "_values", "_loadLimit", "_numberOfEnt
     if (i >= oldKeys.length)
       throw $.ioore(i);
     var key = oldKeys[i];
-    if (key == null || key === $.CTC13)
+    if (key == null || key === $.CTC14)
       continue;
     if (i >= oldValues.length)
       throw $.ioore(i);
@@ -288,7 +280,7 @@ $$.HashMapImplementation = {"": ["_keys", "_values", "_loadLimit", "_numberOfEnt
   if (index < 0 || index >= t1.length)
     throw $.ioore(index);
   t1 = t1[index];
-  if (t1 == null || t1 === $.CTC13)
+  if (t1 == null || t1 === $.CTC14)
     this._numberOfEntries = $.add(this._numberOfEntries, 1);
   t1 = this._keys;
   if (index >= t1.length)
@@ -323,7 +315,7 @@ $$.HashMapImplementation = {"": ["_keys", "_values", "_loadLimit", "_numberOfEnt
     if (i >= t1.length)
       throw $.ioore(i);
     var key = t1[i];
-    if (!(key == null) && !(key === $.CTC13)) {
+    if (!(key == null) && !(key === $.CTC14)) {
       t1 = this._values;
       if (i >= t1.length)
         throw $.ioore(i);
@@ -434,13 +426,13 @@ $$.DoubleLinkedQueueEntry = {"": ["_previous!", "_next=", "_element?"],
 $$._DoubleLinkedQueueEntrySentinel = {"": ["_previous", "_next", "_element"],
  "super": "DoubleLinkedQueueEntry",
  remove$0: function() {
-  throw $.$$throw($.CTC14);
+  throw $.$$throw($.CTC15);
 },
  _asNonSentinelEntry$0: function() {
   return;
 },
  get$element: function() {
-  throw $.$$throw($.CTC14);
+  throw $.$$throw($.CTC15);
 },
  _DoubleLinkedQueueEntrySentinel$0: function() {
   this._link$2(this, this);
@@ -826,7 +818,7 @@ $$.ConstantMap = {"": ["length?", "_jsObject", "_lib1_keys"],
   return $.Maps_mapToString(this);
 },
  _throwImmutable$0: function() {
-  throw $.$$throw($.CTC17);
+  throw $.$$throw($.CTC18);
 },
  operator$indexSet$2: function(key, val) {
   return this._throwImmutable$0();
@@ -1094,27 +1086,30 @@ $$.Ship = {"": ["pos?", "destPos", "isP1", "isSelected=", "isMoving?", "destDire
 },
  draw$1: function(context) {
   var t1 = this.destPos;
-  if (!(t1 == null)) {
-    var velocity = t1.operator$sub$1(this.pos);
-    t1 = velocity.normalize$0();
-    if (typeof t1 !== 'number')
-      return this.draw$1$bailout(1, context, t1, velocity);
-    var t3 = this.pos;
-    if (typeof t3 !== 'number')
-      return this.draw$1$bailout(2, context, velocity, t3);
-    if (typeof velocity !== 'number')
-      throw $.iae(velocity);
-    this.pos = t3 + velocity;
-  }
+  if (typeof t1 !== 'number')
+    return this.draw$1$bailout(1, context, t1, 0);
+  var t2 = this.pos;
+  if (typeof t2 !== 'number')
+    return this.draw$1$bailout(2, context, t1, t2);
+  var velocity = t1 - t2;
+  t2 = velocity.normalize$0();
+  if (typeof t2 !== 'number')
+    return this.draw$1$bailout(3, context, t2, velocity);
+  var t4 = this.pos;
+  if (typeof t4 !== 'number')
+    return this.draw$1$bailout(4, context, t4, velocity);
+  this.pos = t4 + velocity;
   t1 = this.destPos;
-  if (!(t1 == null)) {
-    var t2 = $.get$length(t1.operator$sub$1(this.pos));
-    if (typeof t2 !== 'number')
-      return this.draw$1$bailout(3, context, t2, 0);
-    t2 = t2 < 1;
-    t1 = t2;
-  } else
-    t1 = false;
+  if (typeof t1 !== 'number')
+    return this.draw$1$bailout(5, context, t1, 0);
+  t2 = this.pos;
+  if (typeof t2 !== 'number')
+    return this.draw$1$bailout(6, context, t1, t2);
+  t4 = $.get$length(t1 - t2);
+  if (typeof t4 !== 'number')
+    return this.draw$1$bailout(7, context, t4, 0);
+  t4 = t4 < 1;
+  t1 = t4;
   if (t1) {
     this.destPos = null;
     this.isMoving = false;
@@ -1127,45 +1122,74 @@ $$.Ship = {"": ["pos?", "destPos", "isP1", "isSelected=", "isMoving?", "destDire
     case 1:
       var context = env0;
       t1 = env1;
-      velocity = env2;
       break;
     case 2:
       context = env0;
-      velocity = env1;
-      t1 = env2;
+      t1 = env1;
+      t2 = env2;
       break;
     case 3:
       context = env0;
       t2 = env1;
+      velocity = env2;
+      break;
+    case 4:
+      context = env0;
+      t2 = env1;
+      velocity = env2;
+      break;
+    case 5:
+      context = env0;
+      t1 = env1;
+      break;
+    case 6:
+      context = env0;
+      t1 = env1;
+      t2 = env2;
+      break;
+    case 7:
+      context = env0;
+      t4 = env1;
       break;
   }
   switch (state0) {
     case 0:
       var t1 = this.destPos;
+    case 1:
+      state0 = 0;
     default:
-      if (state0 === 2 || state0 === 1 || state0 === 0 && !(t1 == null))
+      if (state0 === 4 || state0 === 3 || state0 === 2 || state0 === 0 && !(t1 == null))
         switch (state0) {
           case 0:
-            var velocity = t1.operator$sub$1(this.pos);
-            t1 = velocity.normalize$0();
-          case 1:
-            state0 = 0;
-            $.mul(t1, 3);
-            t1 = this.pos;
+            var t2 = this.pos;
           case 2:
             state0 = 0;
-            this.pos = $.add(t1, velocity);
-        }
-      t1 = this.destPos;
-    case 3:
-      if (state0 === 3 || state0 === 0 && !(t1 == null))
-        switch (state0) {
-          case 0:
-            var t2 = $.get$length(t1.operator$sub$1(this.pos));
+            var velocity = $.sub(t1, t2);
+            t2 = velocity.normalize$0();
           case 3:
             state0 = 0;
-            t2 = $.ltB(t2, 1);
-            t1 = t2;
+            $.mul(t2, 3);
+            t2 = this.pos;
+          case 4:
+            state0 = 0;
+            this.pos = $.add(t2, velocity);
+        }
+      t1 = this.destPos;
+    case 5:
+      state0 = 0;
+    case 6:
+    case 7:
+      if (state0 === 7 || state0 === 6 || state0 === 0 && !(t1 == null))
+        switch (state0) {
+          case 0:
+            t2 = this.pos;
+          case 6:
+            state0 = 0;
+            var t4 = $.get$length($.sub(t1, t2));
+          case 7:
+            state0 = 0;
+            t4 = $.ltB(t4, 1);
+            t1 = t4;
         }
       else
         t1 = false;
@@ -1206,12 +1230,18 @@ $$.Ship = {"": ["pos?", "destPos", "isP1", "isSelected=", "isMoving?", "destDire
   context.set$strokeStyle('black');
   context.set$fillStyle('black');
   context.beginPath$0();
-  context.arc$6(0, 0, 15, 2.5132741228718345 * (1 - (this.shipHealth + 20) / 120) + 0.6283185307179586, 2.5132741228718345, false);
+  var t1 = $.div($.add(this.shipHealth, 20), 120);
+  if (typeof t1 !== 'number')
+    throw $.iae(t1);
+  context.arc$6(0, 0, 15, 2.5132741228718345 * (1 - t1) + 0.6283185307179586, 2.5132741228718345, false);
   context.stroke$0();
   context.set$lineWidth(1.5);
   context.set$strokeStyle('green');
   context.beginPath$0();
-  context.arc$6(0, 0, 15, 2.5132741228718345 * (1 - (this.shipHealth + 20) / 120) + 0.6283185307179586, 2.5132741228718345, false);
+  var t2 = $.div($.add(this.shipHealth, 20), 120);
+  if (typeof t2 !== 'number')
+    throw $.iae(t2);
+  context.arc$6(0, 0, 15, 2.5132741228718345 * (1 - t2) + 0.6283185307179586, 2.5132741228718345, false);
   context.stroke$0();
   context.restore$0();
 },
@@ -1252,7 +1282,13 @@ $$.Ship = {"": ["pos?", "destPos", "isP1", "isSelected=", "isMoving?", "destDire
   }
 },
  takeDamage$1: function(dmg) {
-  this.shipHealth = this.shipHealth - dmg;
+  var t1 = this.shipHealth;
+  if (typeof t1 !== 'number')
+    return this.takeDamage$1$bailout(1, dmg, t1);
+  this.shipHealth = t1 - dmg;
+},
+ takeDamage$1$bailout: function(state0, dmg, t1) {
+  this.shipHealth = $.sub(t1, dmg);
 },
  Ship$4: function(_row, _col, _hexSize, _isP1) {
   this.row = _row;
@@ -1431,6 +1467,82 @@ $$.Missile = {"": ["pos?", "lastPos", "velocity="],
   this.pos = _pos;
   this.lastPos = _pos;
   this.velocity = _velocity;
+}
+};
+
+$$.Card = {"": ["pos?", "isSelected=", "cardType?"],
+ "super": "Object",
+ draw$2: function(context, pos) {
+  this.pos = pos;
+  this.drawSelf$2(context, pos);
+},
+ drawSelf$2: function(context, pos) {
+  context.save$0();
+  context.translate$2(pos.x, pos.y);
+  context.set$lineWidth(1);
+  if (this.isSelected === true) {
+    context.set$strokeStyle('red');
+    context.set$fillStyle('red');
+  } else {
+    context.set$strokeStyle('black');
+    context.set$fillStyle('black');
+  }
+  if ($.eqB(this.cardType, 'ship')) {
+    context.rotate$1(-0.6283185307179586);
+    context.beginPath$0();
+    context.moveTo$2(-10, -6);
+    context.lineTo$2(12, 0);
+    context.lineTo$2(-10, 6);
+    context.lineTo$2(-6, 0);
+    context.fill$0();
+    context.closePath$0();
+    context.stroke$0();
+  }
+  context.beginPath$0();
+  context.arc$6(0, 0, 20, 0, 6.283185307179586, false);
+  context.closePath$0();
+  context.stroke$0();
+  context.restore$0();
+},
+ isIntersect$1: function(touchPT) {
+  var t1 = this.pos;
+  if (typeof t1 !== 'number')
+    return this.isIntersect$1$bailout(1, touchPT, t1);
+  if (typeof touchPT !== 'number')
+    throw $.iae(touchPT);
+  var t2 = $.get$length(t1 - touchPT);
+  if (typeof t2 !== 'number')
+    return this.isIntersect$1$bailout(2, t2, 0);
+  if (t2 <= 20)
+    return true;
+  return false;
+},
+ isIntersect$1$bailout: function(state0, env0, env1) {
+  switch (state0) {
+    case 1:
+      var touchPT = env0;
+      t1 = env1;
+      break;
+    case 2:
+      t2 = env0;
+      break;
+  }
+  switch (state0) {
+    case 0:
+      var t1 = this.pos;
+    case 1:
+      state0 = 0;
+      var t2 = $.get$length($.sub(t1, touchPT));
+    case 2:
+      state0 = 0;
+      if ($.leB(t2, 20))
+        return true;
+      return false;
+  }
+},
+ Card$1: function(_type) {
+  this.cardType = _type;
+  this.isSelected = false;
 }
 };
 
@@ -1729,7 +1841,7 @@ $$._PostMessageScheduler = {"": ["_MEASUREMENT_MESSAGE", "_nextMeasurementFrameS
  _handleMessage$1: function(e) {
   this._onCallback$0();
 },
- get$_handleMessage: function() { return new $.BoundClosure0(this, '_handleMessage$1'); },
+ get$_handleMessage: function() { return new $.BoundClosure(this, '_handleMessage$1'); },
  _PostMessageScheduler$1: function(callback) {
   $.add$1($.window().get$on().get$message(), this.get$_handleMessage());
 }
@@ -1744,7 +1856,7 @@ $$._MutationObserverScheduler = {"": ["_observer", "_dummy", "_nextMeasurementFr
  _handleMutation$2: function(mutations, observer) {
   this._onCallback$0();
 },
- get$_handleMutation: function() { return new $.BoundClosure1(this, '_handleMutation$2'); },
+ get$_handleMutation: function() { return new $.BoundClosure0(this, '_handleMutation$2'); },
  _MutationObserverScheduler$1: function(callback) {
   this._observer = $.MutationObserver_MutationObserver(this.get$_handleMutation());
   this._dummy = $.DivElement_DivElement();
@@ -1754,9 +1866,6 @@ $$._MutationObserverScheduler = {"": ["_observer", "_dummy", "_nextMeasurementFr
 
 $$._DOMWindowCrossFrameImpl = {"": ["_window"],
  "super": "Object",
- get$parent: function() {
-  return $._DOMWindowCrossFrameImpl__createSafe(this._window.parent);
-},
  get$top: function() {
   return $._DOMWindowCrossFrameImpl__createSafe(this._window.top);
 },
@@ -1819,6 +1928,15 @@ $$._VariableSizeListIterator = {"": [],
 $$._Random = {"": [],
  "super": "Object",
  nextInt$1: function(max) {
+  if (typeof max !== 'number')
+    return this.nextInt$1$bailout(1, max);
+  if (max < 0)
+    throw $.$$throw($.ArgumentError$('negative max: ' + $.S(max)));
+  if (max > 4294967295)
+    max = 4294967295;
+  return (Math.random() * max) >>> 0;
+},
+ nextInt$1$bailout: function(state0, max) {
   if ($.ltB(max, 0))
     throw $.$$throw($.ArgumentError$('negative max: ' + $.S(max)));
   if ($.gtB(max, 4294967295))
@@ -2509,29 +2627,32 @@ $$.vec4 = {"": ["x=", "y=", "z=", "w="],
 
 $$.main_anon = {"": [],
  "super": "Closure",
- call$1: function(rect) {
-  var minX = $.div($.canvas.get$width(), 4);
-  if (typeof minX !== 'number')
-    return this.call$1$bailout(1, minX);
-  var maxX = minX * 3;
-  var random = $.Random_Random(null);
-  for (var t1 = maxX - minX, i = 0; $.ltB(i, $.add(random.nextInt$1(5), 1)); ++i) {
-    var t2 = random.nextDouble$0();
-    if (typeof t2 !== 'number')
-      throw $.iae(t2);
-    var pt = $.vec2$(t1 * t2 + minX, $.mul($.canvas.get$height(), random.nextDouble$0()));
-    $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random.nextInt$1(20), pt));
+ call$1: function(event$) {
+  event$.preventDefault$0();
+  var pt = $.vec2$($.sub(event$.get$clientX(), $.deckCanvas.get$offsetLeft()), $.sub(event$.get$clientY(), $.deckCanvas.get$offsetTop()));
+  $.didSelectCard = false;
+  for (var t1 = $.iterator($.cardDeck); t1.hasNext$0() === true;) {
+    var t2 = t1.next$0();
+    if (t2.isIntersect$1(pt) === true) {
+      $.didSelectCard = true;
+      t2.set$isSelected(true);
+      $.selectedCard = t2;
+      var t3 = $.selectedShip;
+      if (!(t3 == null)) {
+        t3.set$destDirection(0);
+        t3.set$isSelected(false);
+        $.selectedShip = null;
+        $.isAttacking = false;
+      }
+      if ($.eqB(t2.get$cardType(), 'ship'))
+        $.selectSpawnHex();
+    } else
+      t2.set$isSelected(false);
   }
-  $.window().requestAnimationFrame$1($.draw);
-},
- call$1$bailout: function(state0, minX) {
-  var maxX = $.mul(minX, 3);
-  var random = $.Random_Random(null);
-  for (var i = 0; $.ltB(i, $.add(random.nextInt$1(5), 1)); ++i) {
-    var pt = $.vec2$($.add($.mul($.sub(maxX, minX), random.nextDouble$0()), minX), $.mul($.canvas.get$height(), random.nextDouble$0()));
-    $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random.nextInt$1(20), pt));
+  if ($.didSelectCard !== true) {
+    $.selectedCard = null;
+    $.unselectAllHex();
   }
-  $.window().requestAnimationFrame$1($.draw);
 }
 };
 
@@ -2540,6 +2661,8 @@ $$.main_anon0 = {"": [],
  call$1: function(event$) {
   event$.preventDefault$0();
   var pt = $.vec2$($.sub(event$.get$clientX(), $.canvas.get$offsetLeft()), $.sub(event$.get$clientY(), $.canvas.get$offsetTop()));
+  if ($.didSelectCard === true)
+    return;
   for (var t1 = $.iterator($.shipsP1); t1.hasNext$0() === true;) {
     var t2 = t1.next$0();
     if (t2.isIntersect$1(pt) === true) {
@@ -2561,7 +2684,7 @@ $$.main_anon1 = {"": [],
  call$1: function(event$) {
   if ($.isAttacking === true) {
     $.attackVector = $.vec2$($.sub(event$.get$clientX(), $.canvas.get$offsetLeft()), $.sub(event$.get$clientY(), $.canvas.get$offsetTop()));
-    var t1 = $.atan2($.sub($.selectedShip.get$pos().get$y(), $.attackVector.get$y()), $.sub($.selectedShip.get$pos().get$x(), $.attackVector.get$x()));
+    var t1 = $.atan2($.sub($.attackVector.get$y(), $.selectedShip.get$pos().get$y()), $.sub($.attackVector.get$x(), $.selectedShip.get$pos().get$x()));
     $.selectedShip.set$destDirection(t1);
   }
 }
@@ -2573,7 +2696,7 @@ $$.main_anon2 = {"": [],
   event$.preventDefault$0();
   var pt = $.vec2$($.sub(event$.get$clientX(), $.canvas.get$offsetLeft()), $.sub(event$.get$clientY(), $.canvas.get$offsetTop()));
   if ($.isAttacking === true) {
-    var vel = $.sub($.selectedShip.get$pos(), pt);
+    var vel = pt.operator$sub$1($.selectedShip.get$pos());
     vel.normalize$0();
     vel = $.mul(vel, 5);
     $.add$1($.missiles, $.Missile$($.vec2$($.selectedShip.get$pos().get$x(), $.selectedShip.get$pos().get$y()), vel));
@@ -2582,6 +2705,30 @@ $$.main_anon2 = {"": [],
     if (!(t1 == null)) {
       t1.set$destDirection(0);
       t1.set$isSelected(false);
+    }
+  } else if ($.didSelectCard === true) {
+    for (var i = 0; cardUsed = false, i < 7; ++i)
+      if ($.index($.index($.hexes, i), 0).isIntersect$1(pt) === true)
+        if ($.index($.index($.hexes, i), 0).get$isSelected() === true) {
+          $.add$1($.shipsP1, $.Ship$(i, 0, 3, true));
+          $.didSelectCard = false;
+          $.unselectAllHex();
+          var cardUsed = true;
+          break;
+        }
+    if (cardUsed) {
+      $.selectedCard.set$isSelected(false);
+      for (t1 = $.iterator($.cardDeck), i = 0; t1.hasNext$0() === true;) {
+        if ($.eqB(t1.next$0(), $.selectedCard))
+          break;
+        ++i;
+      }
+      $.removeAt$1($.cardDeck, i);
+    } else {
+      $.didSelectCard = false;
+      $.selectedCard.set$isSelected(false);
+      $.selectedCard = null;
+      $.unselectAllHex();
     }
   } else {
     for (t1 = $.iterator($.shipsP1); didPickShip = false, t1.hasNext$0() === true;) {
@@ -3217,7 +3364,7 @@ $$._convertNativeToDart_IDBKey_containsDate = {"": [],
 $$._MutationObserverImpl_observe_anon = {"": ["parsedOptions_0"],
  "super": "Closure",
  call$2: function(k, v) {
-  if ($.CTC16.containsKey$1(k) === true)
+  if ($.CTC17.containsKey$1(k) === true)
     this.parsedOptions_0[k] = true === v;
   else if ($.eqB(k, 'attributeFilter'))
     this.parsedOptions_0[k] = v;
@@ -3244,7 +3391,7 @@ $$.ConstantMap_forEach_anon = {"": ["this_1", "f_0"],
 $$._DocumentFragmentImpl_rect_anon = {"": [],
  "super": "Closure",
  call$0: function() {
-  return $.CTC19;
+  return $.CTC20;
 }
 };
 
@@ -3258,14 +3405,9 @@ $$.Closure = {"": [],
 $$.BoundClosure = {'':
 ['self', 'target'],
 'super': 'Closure',
-call$4: function(p0, p1, p2, p3) { return this.self[this.target](p0, p1, p2, p3); }
-};
-$$.BoundClosure0 = {'':
-['self', 'target'],
-'super': 'Closure',
 call$1: function(p0) { return this.self[this.target](p0); }
 };
-$$.BoundClosure1 = {'':
+$$.BoundClosure0 = {'':
 ['self', 'target'],
 'super': 'Closure',
 call$2: function(p0, p1) { return this.self[this.target](p0, p1); }
@@ -3375,14 +3517,14 @@ $.HashMapImplementation__nextProbe = function(currentProbe, numberOfProbes, leng
   return $.and($.add(currentProbe, numberOfProbes), $.sub(length$, 1));
 };
 
+$.CastErrorImplementation$ = function(actualType, expectedType) {
+  return new $.CastErrorImplementation(actualType, expectedType);
+};
+
 $.Missile$ = function(_pos, _velocity) {
   var t1 = new $.Missile(null, null, null);
   t1.Missile$2(_pos, _velocity);
   return t1;
-};
-
-$.CastErrorImplementation$ = function(actualType, expectedType) {
-  return new $.CastErrorImplementation(actualType, expectedType);
 };
 
 $.substringUnchecked = function(receiver, startIndex, endIndex) {
@@ -3406,18 +3548,24 @@ $.ge$slow = function(a, b) {
   return a.operator$ge$1(b);
 };
 
-$.IllegalJSRegExpException$ = function(_pattern, _errmsg) {
-  return new $.IllegalJSRegExpException(_pattern, _errmsg);
+$.Card$ = function(_type) {
+  var t1 = new $.Card(null, null, null);
+  t1.Card$1(_type);
+  return t1;
 };
 
-$._IDBOpenDBRequestEventsImpl$ = function(_ptr) {
-  return new $._IDBOpenDBRequestEventsImpl(_ptr);
+$.IllegalJSRegExpException$ = function(_pattern, _errmsg) {
+  return new $.IllegalJSRegExpException(_pattern, _errmsg);
 };
 
 $.clear = function(receiver) {
   if (!$.isJsArray(receiver))
     return receiver.clear$0();
   $.set$length(receiver, 0);
+};
+
+$._IDBOpenDBRequestEventsImpl$ = function(_ptr) {
+  return new $._IDBOpenDBRequestEventsImpl(_ptr);
 };
 
 $.constructorNameFallback = function(object) {
@@ -3539,42 +3687,6 @@ $.drawMissiles = function(context) {
   }
 };
 
-$.log = function(arg, out) {
-  if (typeof arg === 'number')
-    return $.log0(arg);
-  if (typeof arg === 'object' && arg !== null && !!arg.is$vec2) {
-    if (out == null)
-      out = $.vec2$zero();
-    var t1 = $.log0(arg.x);
-    $.propertyTypeCast(out, 'is$vec2');
-    out.set$x(t1);
-    out.set$y($.log0(arg.y));
-    return out;
-  }
-  if (typeof arg === 'object' && arg !== null && !!arg.is$vec3) {
-    if (out == null)
-      out = $.vec3$zero();
-    t1 = $.log0(arg.x);
-    $.propertyTypeCast(out, 'is$vec3');
-    out.set$x(t1);
-    out.set$y($.log0(arg.y));
-    out.set$z($.log0(arg.z));
-    return out;
-  }
-  if (typeof arg === 'object' && arg !== null && !!arg.is$vec4) {
-    if (out == null)
-      out = $.vec4$zero();
-    t1 = $.log0(arg.x);
-    $.propertyTypeCast(out, 'is$vec4');
-    out.set$x(t1);
-    out.set$y($.log0(arg.y));
-    out.set$z($.log0(arg.z));
-    out.set$w($.log0(arg.w));
-    return out;
-  }
-  throw $.$$throw($.IllegalArgumentException$(arg));
-};
-
 $.sqrt = function(x) {
   return Math.sqrt($.checkNum(x));
 };
@@ -3616,7 +3728,7 @@ $.stringReplaceAllUnchecked = function(receiver, from, to) {
       return $.toString(result);
     }
   else
-    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$(from.replace($.regExpMakeNative($.CTC12, true), "\\$&"), false, false), true), to);
+    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$(from.replace($.regExpMakeNative($.CTC13, true), "\\$&"), false, false), true), to);
 };
 
 $.and = function(a, b) {
@@ -3651,10 +3763,6 @@ $.indexSet = function(a, index, value) {
     }
   }
   $.indexSet$slow(a, index, value);
-};
-
-$.log0 = function(x) {
-  return Math.log($.checkNum(x));
 };
 
 $._DOMApplicationCacheEventsImpl$ = function(_ptr) {
@@ -3730,6 +3838,16 @@ $.mul = function(a, b) {
   return typeof a === 'number' && typeof b === 'number' ? a * b : $.mul$slow(a, b);
 };
 
+$.selectSpawnHex = function() {
+  $.unselectAllHex();
+  for (var i = 0; i < 7; ++i) {
+    $.index($.index($.hexes, i), 0).set$isSelected(true);
+    for (var t1 = $.iterator($.shipsP1); t1.hasNext$0() === true;)
+      if (t1.next$0().isIntersect$1($.index($.index($.hexes, i), 0).get$pos()) === true)
+        $.index($.index($.hexes, i), 0).set$isSelected(false);
+  }
+};
+
 $.hashCodeForNativeObject = function(object) {
   return $.Primitives_objectHashCode(object);
 };
@@ -3767,7 +3885,7 @@ $.Collections__emitCollection = function(c, result, visiting) {
 
 $._convertNativeToDart_IDBKey = function(nativeKey) {
   if (new $._convertNativeToDart_IDBKey_containsDate().call$1(nativeKey) === true)
-    throw $.$$throw($.CTC15);
+    throw $.$$throw($.CTC16);
   return nativeKey;
 };
 
@@ -3790,10 +3908,6 @@ $._PeerConnection00EventsImpl$ = function(_ptr) {
   return new $._PeerConnection00EventsImpl(_ptr);
 };
 
-$._WorkerContextEventsImpl$ = function(_ptr) {
-  return new $._WorkerContextEventsImpl(_ptr);
-};
-
 $.Primitives_objectHashCode = function(object) {
   var hash = object.$identityHash;
   if (hash == null) {
@@ -3802,6 +3916,14 @@ $.Primitives_objectHashCode = function(object) {
     object.$identityHash = hash;
   }
   return hash;
+};
+
+$.add = function(a, b) {
+  return typeof a === 'number' && typeof b === 'number' ? a + b : $.add$slow(a, b);
+};
+
+$._WorkerContextEventsImpl$ = function(_ptr) {
+  return new $._WorkerContextEventsImpl(_ptr);
 };
 
 $.$$throw = function(ex) {
@@ -3838,25 +3960,19 @@ $.vec4$ = function(x_, y_, z_, w_) {
   return t1;
 };
 
+$._EventsImpl$ = function(_ptr) {
+  return new $._EventsImpl(_ptr);
+};
+
+$._IDBRequestEventsImpl$ = function(_ptr) {
+  return new $._IDBRequestEventsImpl(_ptr);
+};
+
 $.typeNameInOpera = function(obj) {
   var name$ = $.constructorNameFallback(obj);
   if (name$ === 'Window')
     return 'DOMWindow';
   return name$;
-};
-
-$._EventsImpl$ = function(_ptr) {
-  return new $._EventsImpl(_ptr);
-};
-
-$.isEmpty = function(receiver) {
-  if (typeof receiver === 'string' || $.isJsArray(receiver))
-    return receiver.length === 0;
-  return receiver.isEmpty$0();
-};
-
-$._IDBRequestEventsImpl$ = function(_ptr) {
-  return new $._IDBRequestEventsImpl(_ptr);
 };
 
 $.ArgumentError$ = function(message) {
@@ -3880,16 +3996,6 @@ $._SVGElementInstanceEventsImpl$ = function(_ptr) {
   return new $._SVGElementInstanceEventsImpl(_ptr);
 };
 
-$.removeLast = function(receiver) {
-  if ($.isJsArray(receiver)) {
-    $.checkGrowable(receiver, 'removeLast');
-    if ($.eqB($.get$length(receiver), 0))
-      throw $.$$throw($.IndexOutOfRangeException$(-1));
-    return receiver.pop();
-  }
-  return receiver.removeLast$0();
-};
-
 $.add$1 = function(receiver, value) {
   if ($.isJsArray(receiver)) {
     $.checkGrowable(receiver, 'add');
@@ -3907,6 +4013,10 @@ $.geB = function(a, b) {
   return typeof a === 'number' && typeof b === 'number' ? a >= b : $.ge$slow(a, b) === true;
 };
 
+$.atan2 = function(a, b) {
+  return Math.atan2($.checkNum(a), $.checkNum(b));
+};
+
 $.stringContainsUnchecked = function(receiver, other, startIndex) {
   return !$.eqB($.indexOf$2(receiver, other, startIndex), -1);
 };
@@ -3917,10 +4027,6 @@ $.ObjectNotClosureException$ = function() {
 
 $.window = function() {
   return window;
-};
-
-$.atan2 = function(a, b) {
-  return Math.atan2($.checkNum(a), $.checkNum(b));
 };
 
 $.typeNameInSafari = function(obj) {
@@ -3944,10 +4050,11 @@ $.Primitives_objectTypeName = function(object) {
   return $.charCodeAt(name$, 0) === 36 ? $.substring$1(name$, 1) : name$;
 };
 
-$.iterator = function(receiver) {
-  if ($.isJsArray(receiver))
-    return $.ListIterator$(receiver);
-  return receiver.iterator$0();
+$.drawCardDeck = function(context) {
+  for (var t1 = $.iterator($.cardDeck), posX = 50; t1.hasNext$0() === true;) {
+    t1.next$0().draw$2(context, $.vec2$(posX, 25));
+    posX += 60;
+  }
 };
 
 $.leB = function(a, b) {
@@ -4036,8 +4143,8 @@ $.Maps_mapToString = function(m) {
   return $.toString(result);
 };
 
-$._JavaScriptAudioNodeEventsImpl$ = function(_ptr) {
-  return new $._JavaScriptAudioNodeEventsImpl(_ptr);
+$.MutationObserver_MutationObserver = function(callback) {
+  return $._MutationObserverFactoryProvider_createMutationObserver(callback);
 };
 
 $.Collections__emitObject = function(o, result, visiting) {
@@ -4055,8 +4162,8 @@ $.Collections__emitObject = function(o, result, visiting) {
     $.add$1(result, o);
 };
 
-$.MutationObserver_MutationObserver = function(callback) {
-  return $._MutationObserverFactoryProvider_createMutationObserver(callback);
+$._JavaScriptAudioNodeEventsImpl$ = function(_ptr) {
+  return new $._JavaScriptAudioNodeEventsImpl(_ptr);
 };
 
 $.Maps__emitMap = function(m, result, visiting) {
@@ -4069,14 +4176,14 @@ $.Maps__emitMap = function(m, result, visiting) {
   $.removeLast(visiting);
 };
 
-$._IDBDatabaseEventsImpl$ = function(_ptr) {
-  return new $._IDBDatabaseEventsImpl(_ptr);
-};
-
 $._MeasurementScheduler__MeasurementScheduler$best = function(callback) {
   if ($._isMutationObserverSupported())
     return $._MutationObserverScheduler$(callback);
   return $._PostMessageScheduler$(callback);
+};
+
+$._IDBDatabaseEventsImpl$ = function(_ptr) {
+  return new $._IDBDatabaseEventsImpl(_ptr);
 };
 
 $._MeasurementRequest$ = function(computeValue, completer) {
@@ -4097,6 +4204,12 @@ $.stringReplaceJS = function(receiver, replacer, to) {
 
 $.UnsupportedOperationException$ = function(_message) {
   return new $.UnsupportedOperationException(_message);
+};
+
+$.isEmpty = function(receiver) {
+  if (typeof receiver === 'string' || $.isJsArray(receiver))
+    return receiver.length === 0;
+  return receiver.isEmpty$0();
 };
 
 $._LocalWindowEventsImpl$ = function(_ptr) {
@@ -4121,15 +4234,10 @@ $._PostMessageScheduler$ = function(callback) {
   return t1;
 };
 
-$._DedicatedWorkerContextEventsImpl$ = function(_ptr) {
-  return new $._DedicatedWorkerContextEventsImpl(_ptr);
-};
-
-$.addLast = function(receiver, value) {
-  if (!$.isJsArray(receiver))
-    return receiver.addLast$1(value);
-  $.checkGrowable(receiver, 'addLast');
-  receiver.push(value);
+$.vec3$zero = function() {
+  var t1 = new $.vec3(null, null, null);
+  t1.vec3$zero$0();
+  return t1;
 };
 
 $.selectHex = function(selRow, selCol) {
@@ -4192,14 +4300,8 @@ $._FileReaderEventsImpl$ = function(_ptr) {
   return new $._FileReaderEventsImpl(_ptr);
 };
 
-$.vec3$zero = function() {
-  var t1 = new $.vec3(null, null, null);
-  t1.vec3$zero$0();
-  return t1;
-};
-
-$.add = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a + b : $.add$slow(a, b);
+$._DedicatedWorkerContextEventsImpl$ = function(_ptr) {
+  return new $._DedicatedWorkerContextEventsImpl(_ptr);
 };
 
 $.replaceAll = function(receiver, from, to) {
@@ -4233,25 +4335,20 @@ $.add$slow = function(a, b) {
   return a.operator$add$1(b);
 };
 
-$.Primitives_newList = function(length$) {
-  if (length$ == null)
-    return new Array();
-  if (!(typeof length$ === 'number' && Math.floor(length$) === length$) || length$ < 0)
-    throw $.$$throw($.ArgumentError$(length$));
-  var result = new Array(length$);
-  result.fixed$length = true;
-  return result;
-};
-
 $.main = function() {
   $.canvas = $.query('#container');
+  $.deckCanvas = $.query('#deck');
   $.hexes = [];
   $.hexesP2 = [];
   $.shipsP1 = [];
   $.shipsP2 = [];
   $.planets = [];
   $.missiles = [];
+  $.cardDeck = [];
   $.isAttacking = false;
+  $.didSelectCard = false;
+  $.selectedCard = null;
+  $.selectedShip = null;
   for (var yOffset = 0, row = 0; $.ltB(row, $.numRows); ++row) {
     $.add$1($.hexes, $.ListImplementation_List(null));
     $.add$1($.hexesP2, $.ListImplementation_List(null));
@@ -4280,7 +4377,23 @@ $.main = function() {
   $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
   $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
   $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
-  $.canvas.get$parent().get$rect().then$1(new $.main_anon());
+  var minX = $.div($.canvas.get$width(), 4);
+  if (typeof minX !== 'number')
+    return $.main$bailout(1, minX);
+  var maxX = minX * 3;
+  var random0 = $.Random_Random(null);
+  for (var t1 = maxX - minX, i = 0; $.ltB(i, $.add(random0.nextInt$1(5), 1)); ++i) {
+    t2 = random0.nextDouble$0();
+    if (typeof t2 !== 'number')
+      throw $.iae(t2);
+    var pt = $.vec2$(t1 * t2 + minX, $.mul($.canvas.get$height(), random0.nextDouble$0()));
+    $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random0.nextInt$1(20), pt));
+  }
+  $.add$1($.cardDeck, $.Card$('ship'));
+  $.add$1($.cardDeck, $.Card$('ship'));
+  $.add$1($.cardDeck, $.Card$('ship'));
+  $.window().requestAnimationFrame$1($.draw);
+  $.add$1($.deckCanvas.get$on().get$mouseUp(), new $.main_anon());
   $.add$1($.canvas.get$on().get$doubleClick(), new $.main_anon0());
   $.add$1($.canvas.get$on().get$mouseMove(), new $.main_anon1());
   $.add$1($.canvas.get$on().get$mouseUp(), new $.main_anon2());
@@ -4288,6 +4401,16 @@ $.main = function() {
 
 $._AbstractWorkerEventsImpl$ = function(_ptr) {
   return new $._AbstractWorkerEventsImpl(_ptr);
+};
+
+$.Primitives_newList = function(length$) {
+  if (length$ == null)
+    return new Array();
+  if (!(typeof length$ === 'number' && Math.floor(length$) === length$) || length$ < 0)
+    throw $.$$throw($.ArgumentError$(length$));
+  var result = new Array(length$);
+  result.fixed$length = true;
+  return result;
 };
 
 $._RTCPeerConnectionEventsImpl$ = function(_ptr) {
@@ -4302,6 +4425,10 @@ $._convertDartToNative_SerializedScriptValue = function(value) {
   return $._convertDartToNative_PrepareForStructuredClone(value);
 };
 
+$.IllegalArgumentException$ = function(argument) {
+  return new $.IllegalArgumentException(argument);
+};
+
 $._MutationObserverScheduler$ = function(callback) {
   var t1 = new $._MutationObserverScheduler(null, null, false, callback);
   t1._MutationObserverScheduler$1(callback);
@@ -4312,16 +4439,12 @@ $._MediaElementEventsImpl$ = function(_ptr) {
   return new $._MediaElementEventsImpl(_ptr);
 };
 
-$._BodyElementEventsImpl$ = function(_ptr) {
-  return new $._BodyElementEventsImpl(_ptr);
+$._convertNativeToDart_Window = function(win) {
+  return $._DOMWindowCrossFrameImpl__createSafe(win);
 };
 
 $._IDBTransactionEventsImpl$ = function(_ptr) {
   return new $._IDBTransactionEventsImpl(_ptr);
-};
-
-$._convertNativeToDart_Window = function(win) {
-  return $._DOMWindowCrossFrameImpl__createSafe(win);
 };
 
 $.propertyTypeCastError = function(value, property) {
@@ -4330,10 +4453,6 @@ $.propertyTypeCastError = function(value, property) {
 
 $.FutureImpl$ = function() {
   return new $.FutureImpl(false, null, null, null, false, [], [], []);
-};
-
-$.IllegalArgumentException$ = function(argument) {
-  return new $.IllegalArgumentException(argument);
 };
 
 $.iae = function(argument) {
@@ -4373,21 +4492,6 @@ $.le$slow = function(a, b) {
   return a.operator$le$1(b);
 };
 
-$.toString = function(value) {
-  if (typeof value == "object" && value !== null)
-    if ($.isJsArray(value))
-      return $.Collections_collectionToString(value);
-    else
-      return value.toString$0();
-  if (value === 0 && (1 / value) < 0)
-    return '-0.0';
-  if (value == null)
-    return 'null';
-  if (typeof value == "function")
-    return 'Closure';
-  return String(value);
-};
-
 $.dynamicSetMetadata = function(inputTable) {
   var t1 = $.buildDynamicMetadata(inputTable);
   $._dynamicMetadata(t1);
@@ -4418,6 +4522,10 @@ $.ListIterator$ = function(list) {
   return new $.ListIterator(0, list);
 };
 
+$._BodyElementEventsImpl$ = function(_ptr) {
+  return new $._BodyElementEventsImpl(_ptr);
+};
+
 $.checkNum = function(value) {
   if (!(typeof value === 'number')) {
     $.checkNull(value);
@@ -4432,6 +4540,12 @@ $.FutureAlreadyCompleteException$ = function() {
 
 $._WorkerEventsImpl$ = function(_ptr) {
   return new $._WorkerEventsImpl(_ptr);
+};
+
+$.iterator = function(receiver) {
+  if ($.isJsArray(receiver))
+    return $.ListIterator$(receiver);
+  return receiver.iterator$0();
 };
 
 $.ltB = function(a, b) {
@@ -4492,14 +4606,6 @@ $._dynamicMetadata = function(table) {
   $dynamicMetadata = table;
 };
 
-$._dynamicMetadata0 = function() {
-  if (typeof($dynamicMetadata) === 'undefined') {
-    var t1 = [];
-    $._dynamicMetadata(t1);
-  }
-  return $dynamicMetadata;
-};
-
 $.LinkedHashMapImplementation$ = function() {
   var t1 = new $.LinkedHashMapImplementation(null, null);
   t1.LinkedHashMapImplementation$0();
@@ -4507,7 +4613,15 @@ $.LinkedHashMapImplementation$ = function() {
 };
 
 $.Random_Random = function(seed) {
-  return $.CTC20;
+  return $.CTC21;
+};
+
+$._dynamicMetadata0 = function() {
+  if (typeof($dynamicMetadata) === 'undefined') {
+    var t1 = [];
+    $._dynamicMetadata(t1);
+  }
+  return $dynamicMetadata;
 };
 
 $.regExpGetNative = function(regExp) {
@@ -4578,6 +4692,31 @@ $.index$slow = function(a, index) {
   return a.operator$index$1(index);
 };
 
+$.removeLast = function(receiver) {
+  if ($.isJsArray(receiver)) {
+    $.checkGrowable(receiver, 'removeLast');
+    if ($.eqB($.get$length(receiver), 0))
+      throw $.$$throw($.IndexOutOfRangeException$(-1));
+    return receiver.pop();
+  }
+  return receiver.removeLast$0();
+};
+
+$.toString = function(value) {
+  if (typeof value == "object" && value !== null)
+    if ($.isJsArray(value))
+      return $.Collections_collectionToString(value);
+    else
+      return value.toString$0();
+  if (value === 0 && (1 / value) < 0)
+    return '-0.0';
+  if (value == null)
+    return 'null';
+  if (typeof value == "function")
+    return 'Closure';
+  return String(value);
+};
+
 $.propertyTypeCast = function(value, property) {
   if (value == null || !!value[property])
     return value;
@@ -4636,6 +4775,12 @@ $.StringImplementation__toJsStringArray = function(strings) {
 
 $.IndexOutOfRangeException$ = function(_value) {
   return new $.IndexOutOfRangeException(_value);
+};
+
+$.DoubleLinkedQueueEntry$ = function(e) {
+  var t1 = new $.DoubleLinkedQueueEntry(null, null, null);
+  t1.DoubleLinkedQueueEntry$1(e);
+  return t1;
 };
 
 $._TextTrackEventsImpl$ = function(_ptr) {
@@ -4698,28 +4843,29 @@ $.draw = function(time) {
   $.drawBackground(context);
   $.drawBackground(context);
   $.drawHex(context);
-  if ($.isAttacking === true) {
-    t1 = $.attackVector;
-    if (!(t1 == null)) {
-      t1 = t1.get$y();
+  if ($.isAttacking === true)
+    if (!($.attackVector == null)) {
+      t1 = $.selectedShip.get$pos().get$y();
       if (typeof t1 !== 'number')
-        return $.draw$bailout(3, context, t1, 0, 0);
-      var t3 = $.selectedShip.get$pos().get$y();
+        return $.draw$bailout(3, t1, context, 0, 0);
+      var t3 = $.attackVector.get$y();
       if (typeof t3 !== 'number')
-        return $.draw$bailout(4, context, t3, t1, 0);
+        return $.draw$bailout(4, t1, context, t3, 0);
       t3 = t1 - t3;
-      t1 = $.attackVector.get$x();
+      t1 = $.selectedShip.get$pos().get$x();
       if (typeof t1 !== 'number')
         return $.draw$bailout(5, context, t3, t1, 0);
-      var t6 = $.selectedShip.get$pos().get$x();
+      var t6 = $.attackVector.get$x();
       if (typeof t6 !== 'number')
         return $.draw$bailout(6, context, t6, t3, t1);
       $.drawShootPath($.atan2(t3, t1 - t6), 5, $.selectedShip.get$pos(), context);
     }
-  }
   $.drawShips(context);
   $.drawMissiles(context);
   $.drawPlanets(context);
+  var deckContext = $.deckCanvas.get$context2d();
+  $.drawBackground(deckContext);
+  $.drawCardDeck(deckContext);
   $.window().requestAnimationFrame$1($.draw);
 };
 
@@ -4733,12 +4879,19 @@ $.Collections_collectionToString = function(c) {
   return $.toString(result);
 };
 
-$.MetaInfo$ = function(_tag, _tags, _set) {
-  return new $.MetaInfo(_tag, _tags, _set);
+$.addLast = function(receiver, value) {
+  if (!$.isJsArray(receiver))
+    return receiver.addLast$1(value);
+  $.checkGrowable(receiver, 'addLast');
+  receiver.push(value);
 };
 
-$._MediaStreamEventsImpl$ = function(_ptr) {
-  return new $._MediaStreamEventsImpl(_ptr);
+$.KeyValuePair$ = function(key, value) {
+  return new $.KeyValuePair(key, value);
+};
+
+$.MetaInfo$ = function(_tag, _tags, _set) {
+  return new $.MetaInfo(_tag, _tags, _set);
 };
 
 $.clamp = function(x, min_, max_, out) {
@@ -4842,6 +4995,10 @@ $.clamp = function(x, min_, max_, out) {
   throw $.$$throw($.IllegalArgumentException$(x));
 };
 
+$._MediaStreamEventsImpl$ = function(_ptr) {
+  return new $._MediaStreamEventsImpl(_ptr);
+};
+
 $.defineProperty = function(obj, property, value) {
   Object.defineProperty(obj, property,
       {value: value, enumerable: false, writable: true, configurable: true});
@@ -4857,10 +5014,6 @@ $.checkString = function(value) {
 
 $.div = function(a, b) {
   return typeof a === 'number' && typeof b === 'number' ? a / b : $.div$slow(a, b);
-};
-
-$.KeyValuePair$ = function(key, value) {
-  return new $.KeyValuePair(key, value);
 };
 
 $.dynamicFunction = function(name$) {
@@ -4918,42 +5071,10 @@ $.ioore = function(index) {
   throw $.$$throw($.IndexOutOfRangeException$(index));
 };
 
-$.DoubleLinkedQueueEntry$ = function(e) {
-  var t1 = new $.DoubleLinkedQueueEntry(null, null, null);
-  t1.DoubleLinkedQueueEntry$1(e);
-  return t1;
-};
-
 $.drawBackground = function(context) {
   context.set$fillStyle('white');
   context.rect$4(0, 0, context.get$canvas().get$width(), context.get$canvas().get$height());
   context.fill$0();
-};
-
-$.forEach = function(receiver, f) {
-  if (!$.isJsArray(receiver))
-    return receiver.forEach$1(f);
-  else
-    return $.Collections_forEach(receiver, f);
-};
-
-$.showFps = function(fps) {
-  if ($.fpsAverage == null)
-    $.fpsAverage = fps;
-  $.fpsAverage = $.add($.mul(fps, 0.05), $.mul($.fpsAverage, 0.95));
-  var t1 = $.S($.toInt($.round($.fpsAverage))) + ' fps';
-  $.query('#notes').set$text(t1);
-};
-
-$.gt$slow = function(a, b) {
-  if ($.checkNumbers(a, b))
-    return a > b;
-  return a.operator$gt$1(b);
-};
-
-$.Collections_forEach = function(iterable, f) {
-  for (var t1 = $.iterator(iterable); t1.hasNext$0() === true;)
-    f.call$1(t1.next$0());
 };
 
 $.typeNameInFirefox = function(obj) {
@@ -4975,6 +5096,32 @@ $.typeNameInFirefox = function(obj) {
   if (name$ === 'OfflineResourceList')
     return 'DOMApplicationCache';
   return name$;
+};
+
+$.showFps = function(fps) {
+  if ($.fpsAverage == null)
+    $.fpsAverage = fps;
+  $.fpsAverage = $.add($.mul(fps, 0.05), $.mul($.fpsAverage, 0.95));
+  var t1 = $.S($.toInt($.round($.fpsAverage))) + ' fps';
+  $.query('#notes').set$text(t1);
+};
+
+$.gt$slow = function(a, b) {
+  if ($.checkNumbers(a, b))
+    return a > b;
+  return a.operator$gt$1(b);
+};
+
+$.forEach = function(receiver, f) {
+  if (!$.isJsArray(receiver))
+    return receiver.forEach$1(f);
+  else
+    return $.Collections_forEach(receiver, f);
+};
+
+$.Collections_forEach = function(iterable, f) {
+  for (var t1 = $.iterator(iterable); t1.hasNext$0() === true;)
+    f.call$1(t1.next$0());
 };
 
 $.drawShootPath = function(_angle, _speed, pos, context) {
@@ -5032,11 +5179,6 @@ $.drawShootPath = function(_angle, _speed, pos, context) {
   }
 };
 
-$._Collections_forEach = function(iterable, f) {
-  for (var t1 = $.iterator(iterable); t1.hasNext$0() === true;)
-    f.call$1(t1.next$0());
-};
-
 $.hashCode = function(receiver) {
   if (receiver == null)
     return 0;
@@ -5074,6 +5216,11 @@ $.startsWith = function(receiver, other) {
   if (length$ > receiver.length)
     return false;
   return other == receiver.substring(0, length$);
+};
+
+$._Collections_forEach = function(iterable, f) {
+  for (var t1 = $.iterator(iterable); t1.hasNext$0() === true;)
+    f.call$1(t1.next$0());
 };
 
 $.toStringForNativeObject = function(obj) {
@@ -5137,6 +5284,42 @@ $.index = function(a, index) {
   return $.index$slow(a, index);
 };
 
+$.log = function(arg, out) {
+  if (typeof arg === 'number')
+    return $.log0(arg);
+  if (typeof arg === 'object' && arg !== null && !!arg.is$vec2) {
+    if (out == null)
+      out = $.vec2$zero();
+    var t1 = $.log0(arg.x);
+    $.propertyTypeCast(out, 'is$vec2');
+    out.set$x(t1);
+    out.set$y($.log0(arg.y));
+    return out;
+  }
+  if (typeof arg === 'object' && arg !== null && !!arg.is$vec3) {
+    if (out == null)
+      out = $.vec3$zero();
+    t1 = $.log0(arg.x);
+    $.propertyTypeCast(out, 'is$vec3');
+    out.set$x(t1);
+    out.set$y($.log0(arg.y));
+    out.set$z($.log0(arg.z));
+    return out;
+  }
+  if (typeof arg === 'object' && arg !== null && !!arg.is$vec4) {
+    if (out == null)
+      out = $.vec4$zero();
+    t1 = $.log0(arg.x);
+    $.propertyTypeCast(out, 'is$vec4');
+    out.set$x(t1);
+    out.set$y($.log0(arg.y));
+    out.set$z($.log0(arg.z));
+    out.set$w($.log0(arg.w));
+    return out;
+  }
+  throw $.$$throw($.IllegalArgumentException$(arg));
+};
+
 $._ElementEventsImpl$ = function(_ptr) {
   return new $._ElementEventsImpl(_ptr);
 };
@@ -5147,6 +5330,16 @@ $.sin = function(x) {
 
 $.ListImplementation_List = function(length$) {
   return $.Primitives_newList(length$);
+};
+
+$.log0 = function(x) {
+  return Math.log($.checkNum(x));
+};
+
+$.vec2$zero = function() {
+  var t1 = new $.vec2(null, null);
+  t1.vec2$zero$0();
+  return t1;
 };
 
 $._DOMWindowCrossFrameImpl__createSafe = function(w) {
@@ -5164,12 +5357,6 @@ $._MutationObserverFactoryProvider_createMutationObserver = function(callback) {
         window.MozMutationObserver;
     return new constructor(callback);
   
-};
-
-$.vec2$zero = function() {
-  var t1 = new $.vec2(null, null);
-  t1.vec2$zero$0();
-  return t1;
 };
 
 $.query = function(selector) {
@@ -5212,16 +5399,16 @@ $.HashMapImplementation$ = function() {
   return t1;
 };
 
-$.substring$1 = function(receiver, startIndex) {
-  if (!(typeof receiver === 'string'))
-    return receiver.substring$1(startIndex);
-  return $.substring$2(receiver, startIndex, null);
-};
-
 $.div$slow = function(a, b) {
   if ($.checkNumbers(a, b))
     return a / b;
   return a.operator$div$1(b);
+};
+
+$.substring$1 = function(receiver, startIndex) {
+  if (!(typeof receiver === 'string'))
+    return receiver.substring$1(startIndex);
+  return $.substring$2(receiver, startIndex, null);
 };
 
 $.FormatException$ = function(message) {
@@ -5321,6 +5508,23 @@ $.sub = function(a, b) {
   return typeof a === 'number' && typeof b === 'number' ? a - b : $.sub$slow(a, b);
 };
 
+$.main$bailout = function(state0, minX) {
+  var maxX = $.mul(minX, 3);
+  var random0 = $.Random_Random(null);
+  for (var i = 0; $.ltB(i, $.add(random0.nextInt$1(5), 1)); ++i) {
+    var pt = $.vec2$($.add($.mul($.sub(maxX, minX), random0.nextDouble$0()), minX), $.mul($.canvas.get$height(), random0.nextDouble$0()));
+    $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random0.nextInt$1(20), pt));
+  }
+  $.add$1($.cardDeck, $.Card$('ship'));
+  $.add$1($.cardDeck, $.Card$('ship'));
+  $.add$1($.cardDeck, $.Card$('ship'));
+  $.window().requestAnimationFrame$1($.draw);
+  $.add$1($.deckCanvas.get$on().get$mouseUp(), new $.main_anon());
+  $.add$1($.canvas.get$on().get$doubleClick(), new $.main_anon0());
+  $.add$1($.canvas.get$on().get$mouseMove(), new $.main_anon1());
+  $.add$1($.canvas.get$on().get$mouseUp(), new $.main_anon2());
+};
+
 $.drawShootPath$bailout = function(state0, env0, env1, env2, env3, env4) {
   switch (state0) {
     case 1:
@@ -5405,13 +5609,13 @@ $.draw$bailout = function(state0, env0, env1, env2, env3) {
       t1 = env1;
       break;
     case 3:
-      context = env0;
-      t1 = env1;
+      t1 = env0;
+      context = env1;
       break;
     case 4:
-      context = env0;
-      t3 = env1;
-      t1 = env2;
+      t1 = env0;
+      context = env1;
+      t3 = env2;
       break;
     case 5:
       context = env0;
@@ -5447,22 +5651,21 @@ $.draw$bailout = function(state0, env0, env1, env2, env3) {
       if (state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && $.isAttacking === true)
         switch (state0) {
           case 0:
-            t1 = $.attackVector;
           default:
-            if (state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && !(t1 == null))
+            if (state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && !($.attackVector == null))
               switch (state0) {
                 case 0:
-                  t1 = t1.get$y();
+                  t1 = $.selectedShip.get$pos().get$y();
                 case 3:
                   state0 = 0;
-                  var t3 = $.selectedShip.get$pos().get$y();
+                  var t3 = $.attackVector.get$y();
                 case 4:
                   state0 = 0;
                   t3 = $.sub(t1, t3);
-                  t1 = $.attackVector.get$x();
+                  t1 = $.selectedShip.get$pos().get$x();
                 case 5:
                   state0 = 0;
-                  var t6 = $.selectedShip.get$pos().get$x();
+                  var t6 = $.attackVector.get$x();
                 case 6:
                   state0 = 0;
                   $.drawShootPath($.atan2(t3, $.sub(t1, t6)), 5, $.selectedShip.get$pos(), context);
@@ -5471,6 +5674,9 @@ $.draw$bailout = function(state0, env0, env1, env2, env3) {
       $.drawShips(context);
       $.drawMissiles(context);
       $.drawPlanets(context);
+      var deckContext = $.deckCanvas.get$context2d();
+      $.drawBackground(deckContext);
+      $.drawCardDeck(deckContext);
       $.window().requestAnimationFrame$1($.draw);
   }
 };
@@ -5539,29 +5745,29 @@ $.CTC27 = 'attributeOldValue';
 $.CTC28 = 'characterDataOldValue';
 $.CTC29 = Isolate.makeConstantList(['childList', 'attributes', 'characterData', 'subtree', 'attributeOldValue', 'characterDataOldValue']);
 $.CTC30 = true;
-$.CTC16 = new Isolate.$isolateProperties.ConstantMap(6, {'childList': true, 'attributes': true, 'characterData': true, 'subtree': true, 'attributeOldValue': true, 'characterDataOldValue': true}, Isolate.$isolateProperties.CTC29);
+$.CTC17 = new Isolate.$isolateProperties.ConstantMap(6, {'childList': true, 'attributes': true, 'characterData': true, 'subtree': true, 'attributeOldValue': true, 'characterDataOldValue': true}, Isolate.$isolateProperties.CTC29);
 $.CTC31 = 'structured clone of ArrayBufferView';
 $.CTC10 = new Isolate.$isolateProperties.NotImplementedException('structured clone of ArrayBufferView');
-$.CTC13 = new Isolate.$isolateProperties._DeletedKeySentinel();
+$.CTC14 = new Isolate.$isolateProperties._DeletedKeySentinel();
 $.CTC32 = 'structured clone of ImageData';
 $.CTC8 = new Isolate.$isolateProperties.NotImplementedException('structured clone of ImageData');
 $.CTC33 = 'structured clone of other type';
 $.CTC11 = new Isolate.$isolateProperties.NotImplementedException('structured clone of other type');
 $.CTC34 = '^#[_a-zA-Z]\\w*$';
 $.CTC35 = false;
-$.CTC21 = new Isolate.$isolateProperties.JSSyntaxRegExp('^#[_a-zA-Z]\\w*$', false, false);
+$.CTC12 = new Isolate.$isolateProperties.JSSyntaxRegExp('^#[_a-zA-Z]\\w*$', false, false);
 $.CTC22 = new Isolate.$isolateProperties.Object();
 $.CTC36 = 'Incorrect number or type of arguments';
-$.CTC18 = new Isolate.$isolateProperties._ExceptionImplementation('Incorrect number or type of arguments');
+$.CTC19 = new Isolate.$isolateProperties._ExceptionImplementation('Incorrect number or type of arguments');
 $.CTC37 = '[-[\\]{}()*+?.,\\\\^$|#\\s]';
-$.CTC12 = new Isolate.$isolateProperties.JSSyntaxRegExp('[-[\\]{}()*+?.,\\\\^$|#\\s]', false, false);
+$.CTC13 = new Isolate.$isolateProperties.JSSyntaxRegExp('[-[\\]{}()*+?.,\\\\^$|#\\s]', false, false);
 $.CTC38 = 'IDBKey containing Date';
-$.CTC15 = new Isolate.$isolateProperties.NotImplementedException('IDBKey containing Date');
+$.CTC16 = new Isolate.$isolateProperties.NotImplementedException('IDBKey containing Date');
 $.CTC39 = 'structured clone of File';
 $.CTC6 = new Isolate.$isolateProperties.NotImplementedException('structured clone of File');
 $.CTC40 = 0;
 $.CTC41 = new Isolate.$isolateProperties._SimpleClientRect(0, 0, 0, 0);
-$.CTC19 = new Isolate.$isolateProperties.EmptyElementRect(Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC1);
+$.CTC20 = new Isolate.$isolateProperties.EmptyElementRect(Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC41, Isolate.$isolateProperties.CTC1);
 $.CTC42 = 'structured clone of RegExp';
 $.CTC5 = new Isolate.$isolateProperties.NotImplementedException('structured clone of RegExp');
 $.CTC43 = 'Cannot removeLast on immutable List.';
@@ -5570,8 +5776,8 @@ $.CTC44 = 'structured clone of Date';
 $.CTC4 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Date');
 $.CTC45 = 'structured clone of ArrayBuffer';
 $.CTC9 = new Isolate.$isolateProperties.NotImplementedException('structured clone of ArrayBuffer');
-$.CTC20 = new Isolate.$isolateProperties._Random();
-$.CTC17 = new Isolate.$isolateProperties.IllegalAccessException();
+$.CTC21 = new Isolate.$isolateProperties._Random();
+$.CTC18 = new Isolate.$isolateProperties.IllegalAccessException();
 $.CTC46 = 'structured clone of Blob';
 $.CTC7 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Blob');
 $.CTC47 = null;
@@ -5579,7 +5785,7 @@ $.CTC0 = new Isolate.$isolateProperties.NullPointerException(null, Isolate.$isol
 $.CTC2 = new Isolate.$isolateProperties.NoMoreElementsException();
 $.CTC48 = 'Cannot add to immutable List.';
 $.CTC = new Isolate.$isolateProperties.UnsupportedOperationException('Cannot add to immutable List.');
-$.CTC14 = new Isolate.$isolateProperties.EmptyQueueException();
+$.CTC15 = new Isolate.$isolateProperties.EmptyQueueException();
 $.attackVector = null;
 $._pendingRequests = null;
 $.shipsP2 = null;
@@ -5592,14 +5798,18 @@ $.missiles = null;
 $.Primitives_DOLLAR_CHAR_VALUE = 36;
 $.canvas = null;
 $.planets = null;
-$.HashMapImplementation__DELETED_KEY = Isolate.$isolateProperties.CTC13;
+$.HashMapImplementation__DELETED_KEY = Isolate.$isolateProperties.CTC14;
 $.numCols = 10;
+$.cardDeck = null;
 $._getTypeNameOf = null;
 $.shipsP1 = null;
 $.Primitives_hashCodeSeed = 0;
+$.didSelectCard = null;
 $.numRows = 7;
 $._pendingMeasurementFrameCallbacks = null;
 $._measurementScheduler = null;
+$.deckCanvas = null;
+$.selectedCard = null;
 $.fpsAverage = null;
 $.hexes = null;
 $.isAttacking = null;
@@ -5647,8 +5857,8 @@ $.$defineNativeClass = function(cls, desc) {
  is$_FileImpl: function() { return false; },
  is$_ImageDataImpl: function() { return false; },
  is$_BlobImpl: function() { return false; },
- is$ArrayBuffer: function() { return false; },
  is$_ArrayBufferViewImpl: function() { return false; },
+ is$ArrayBuffer: function() { return false; },
  is$Collection: function() { return false; },
  is$JavaScriptIndexingBehavior: function() { return false; },
  is$_FileListImpl: function() { return false; },
@@ -5979,7 +6189,6 @@ $.$defineNativeClass('CanvasRenderingContext2D', {"": ["fillStyle!", "lineWidth!
  rect$4: function(x, y, width, height) {
   return this.rect(x,y,width,height);
 },
- get$rect: function() { return new $.BoundClosure(this, 'rect$4'); },
  restore$0: function() {
   return this.restore();
 },
@@ -6342,7 +6551,7 @@ $.$defineNativeClass('HTMLDocument', {"": [],
   return this.querySelector(selectors);
 },
  query$1: function(selectors) {
-  if ($.CTC21.hasMatch$1(selectors) === true)
+  if ($.CTC12.hasMatch$1(selectors) === true)
     return this.$dom_getElementById$1($.substring$1(selectors, 1));
   return this.$dom_querySelector$1(selectors);
 }
@@ -7149,12 +7358,6 @@ $.$defineNativeClass('DOMWindow', {"": [],
  get$on: function() {
   return $._LocalWindowEventsImpl$(this);
 },
- get$parent: function() {
-  return $._convertNativeToDart_Window(this.get$_parent());
-},
- get$_parent: function() {
-  return this.parent;
-},
  get$top: function() {
   return $._convertNativeToDart_Window(this.get$_top());
 },
@@ -7187,7 +7390,7 @@ $.$defineNativeClass('DOMWindow', {"": [],
     this._postMessage_2$3($._convertDartToNative_SerializedScriptValue(message), targetOrigin, messagePorts);
     return;
   }
-  throw $.$$throw($.CTC18);
+  throw $.$$throw($.CTC19);
 },
  postMessage$2: function(message,targetOrigin) {
   return this.postMessage$3(message,targetOrigin,$)
@@ -7482,7 +7685,7 @@ $.$defineNativeClass('Node', {"": [],
 $.$defineNativeClass('NodeIterator', {"": []
 });
 
-$.$defineNativeClass('NodeList', {"": ["_parent?", "length?"],
+$.$defineNativeClass('NodeList', {"": ["length?"],
  iterator$0: function() {
   return $._FixedSizeListIterator$(this);
 },

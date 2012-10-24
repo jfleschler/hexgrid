@@ -8,9 +8,11 @@
 #source("ship.dart");
 #source("planetarybody.dart");
 #source("missile.dart");
+#source("card.dart");
 
 //Variables
 CanvasElement canvas;
+CanvasElement deckCanvas;
 
 double fpsAverage;
 num renderTime;
@@ -24,14 +26,18 @@ List<Ship> shipsP1;
 List<Ship> shipsP2;
 List<PlanetaryBody> planets;
 List<Missile> missiles;
+List<Card> cardDeck;
 
 Ship selectedShip;
+Card selectedCard;
 
 bool isAttacking;
+bool didSelectCard;
 vec2 attackVector;
 //---------------------------------------------------------------------------------------------------------------------
 void main() {
   canvas = query("#container");
+  deckCanvas = query("#deck");
   
   hexes = [];
   hexesP2 = [];
@@ -39,12 +45,17 @@ void main() {
   shipsP2 = [];
   planets = [];
   missiles = [];
+  cardDeck = [];
   
   num hexSize = 3;
   num yOffset = 0;
   
   isAttacking = false;
-
+  didSelectCard = false;
+  
+  selectedCard = null;
+  selectedShip = null;
+  
   for(num row = 0; row < numRows; row++) {
     hexes.add(new List<Hex>());
     hexesP2.add(new List<Hex>());
@@ -74,29 +85,67 @@ void main() {
   shipsP2.add(new Ship(random.nextInt(numRows), random.nextInt(numCols), 3, false));
   shipsP2.add(new Ship(random.nextInt(numRows), random.nextInt(numCols), 3, false));
   
-  canvas.parent.rect.then((ElementRect rect) {
-    
   // Initialize the planets and start the simulation.
-    num minX = canvas.width / 4;
-    num maxX = minX * 3;
-    
-    var random = new Math.Random();
+  num minX = canvas.width / 4;
+  num maxX = minX * 3;
+  
+  random = new Math.Random();
 
-    for(num i = 0; i < random.nextInt(5) + 1; i++){
-      num newX = (maxX - minX) * random.nextDouble() + minX;
-      num newY = canvas.height * random.nextDouble();
-      
-      vec2 pt = new vec2(newX, newY);
-      planets.add(new PlanetaryBody("Sun", "#ff2", random.nextInt(20), pt));
+  for(num i = 0; i < random.nextInt(5) + 1; i++){
+    num newX = (maxX - minX) * random.nextDouble() + minX;
+    num newY = canvas.height * random.nextDouble();
+    
+    vec2 pt = new vec2(newX, newY);
+    planets.add(new PlanetaryBody("Sun", "#ff2", random.nextInt(20), pt));
+  }
+  
+  
+  // Add some cards to the deck
+  cardDeck.add(new Card("ship"));
+  cardDeck.add(new Card("ship"));
+  cardDeck.add(new Card("ship"));
+  
+  requestRedraw();
+  
+  // EVENT HANDLERS
+  deckCanvas.on.mouseUp.add((MouseEvent event) {
+    event.preventDefault();
+    vec2 pt = new vec2(event.clientX - deckCanvas.offsetLeft, event.clientY - deckCanvas.offsetTop);
+    didSelectCard = false;
+    for (Card c in cardDeck) {
+      if (c.isIntersect(pt)) {
+        didSelectCard = true;
+        c.isSelected = true;
+        selectedCard = c;
+        
+        if (selectedShip != null) {
+          selectedShip.destDirection = 0.0;
+          selectedShip.isSelected = false;
+          selectedShip = null;
+          isAttacking = false;
+        }
+       
+        if (c.cardType == "ship") {
+          selectSpawnHex();
+        }
+        
+      } else {
+        c.isSelected = false;
+      }
     }
     
-    requestRedraw();
+    if (!didSelectCard) {
+      selectedCard = null;
+      unselectAllHex();
+    }
   });
-  
   
   canvas.on.doubleClick.add((MouseEvent event) {
     event.preventDefault();
     vec2 pt = new vec2(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+    
+    if (didSelectCard)
+      return;
     
     for (Ship s in shipsP1) {
       
@@ -117,7 +166,7 @@ void main() {
   canvas.on.mouseMove.add((MouseEvent event) {
     if (isAttacking) {
       attackVector = new vec2(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
-      selectedShip.destDirection = Math.atan2(selectedShip.pos.y - attackVector.y, selectedShip.pos.x - attackVector.x);
+      selectedShip.destDirection = Math.atan2(attackVector.y - selectedShip.pos.y, attackVector.x - selectedShip.pos.x);
     }
   });
   
@@ -126,7 +175,7 @@ void main() {
     vec2 pt = new vec2(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
     
     if (isAttacking) {
-      vec2 vel = selectedShip.pos - pt;
+      vec2 vel = pt - selectedShip.pos;
       vel.normalize();
       vel *= 5;
       missiles.add(new Missile(new vec2(selectedShip.pos.x, selectedShip.pos.y), vel));
@@ -136,6 +185,39 @@ void main() {
         selectedShip.destDirection = 0.0;
         selectedShip.isSelected = false;
       }
+    } else if (didSelectCard) {
+      bool cardUsed = false;
+      
+      for (num i = 0; i < 7; i++) {
+        if (hexes[i][0].isIntersect(pt)) {
+          if (hexes[i][0].isSelected) {
+            shipsP1.add(new Ship(i, 0, 3, true));
+            didSelectCard = false;
+            cardUsed = true;
+            unselectAllHex();
+            break;
+          }
+        }
+      }
+      
+      if (cardUsed) {
+        selectedCard.isSelected = false;
+        
+        num i = 0;
+        for (Card c in cardDeck) {
+          if (c == selectedCard) {
+            break;
+          }
+          i++;
+        }
+        cardDeck.removeAt(i);
+      } else {
+        didSelectCard = false;
+        selectedCard.isSelected = false;
+        selectedCard = null;
+        unselectAllHex();
+      }
+      
     } else {
     
       bool didPickShip = false;
@@ -198,6 +280,22 @@ void unselectAllHex() {
   }
 }
 
+
+void selectSpawnHex() {
+  unselectAllHex();
+  
+  for (num i = 0; i < 7; i++) {
+    hexes[i][0].isSelected = true;
+    for (Ship s in shipsP1) {
+      if (s.isIntersect(hexes[i][0].pos)) {
+        hexes[i][0].isSelected = false;
+      }
+    }
+  }
+  
+
+}
+
 void selectHex(num selRow, num selCol) {
   unselectAllHex();
     
@@ -229,18 +327,20 @@ void draw(int time) {
 
   drawBackground(context);
   drawBackground(context);
-
   drawHex(context);
 
   if (isAttacking)
     if (attackVector != null)
-      drawShootPath(Math.atan2(attackVector.y - selectedShip.pos.y, attackVector.x - selectedShip.pos.x), 5.0, selectedShip.pos, context);
+      drawShootPath(Math.atan2(selectedShip.pos.y - attackVector.y, selectedShip.pos.x - attackVector.x), 5.0, selectedShip.pos, context);
   
   drawShips(context);
-  
   drawMissiles(context);
-  
   drawPlanets(context);
+  
+  var deckContext = deckCanvas.context2d;
+  
+  drawBackground(deckContext);
+  drawCardDeck(deckContext);
   requestRedraw();
 }
 
@@ -338,6 +438,14 @@ void drawMissiles(CanvasRenderingContext2D context) {
     } else {
       i++;
     }
+  }
+}
+
+void drawCardDeck(CanvasRenderingContext2D context) {
+  num posX = 50;
+  for (Card c in cardDeck) {
+    c.draw(context, new vec2(posX,25));
+    posX += 60;
   }
 }
 
