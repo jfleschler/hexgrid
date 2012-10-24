@@ -2,11 +2,13 @@
 class Ship {
   vec2 pos;
   vec2 destPos;
+  bool isP1;
   bool isSelected;
   bool isMoving;
   double destDirection;
-  
   double shipHealth;
+  
+  num hexStart;
   
   num row, col, hexSize;
 //  Ship(vec2 _pos) {
@@ -14,12 +16,19 @@ class Ship {
 //    isSelected = false;
 //  }
   
-  Ship(num _row, num _col, num _hexSize) {
+  Ship(num _row, num _col, num _hexSize, bool _isP1) {
     row = _row;
     col = _col;
     hexSize = _hexSize;
+    isP1 = _isP1;
     
     shipHealth = 100.0;
+    
+    if (isP1) {
+      hexStart = 40;
+    } else {
+      hexStart = canvas.width - 40;
+    }
     
     num yOffset;
     if (col % 2 == 1)
@@ -27,7 +36,7 @@ class Ship {
     else
       yOffset = 0;
     
-    pos = new vec2(40 + col * (7*hexSize), 20 + row * (20*hexSize) + yOffset);
+    pos = new vec2(hexStart + (isP1 ? col : -col) * (7*hexSize), 20 + row * (20*hexSize) + yOffset);
     destPos = null;
     
     isMoving = false;
@@ -45,7 +54,7 @@ class Ship {
       yOffset = 0;
     
     isMoving = true;
-    destPos = new vec2(40 + col * (7*hexSize), 20 + row * (20*hexSize) + yOffset);
+    destPos = new vec2(hexStart + (isP1 ? col : -col) * (7*hexSize), 20 + row * (20*hexSize) + yOffset);
     
     destDirection = Math.atan2(destPos.y - pos.y, destPos.x - pos.x);
   }
@@ -80,6 +89,7 @@ class Ship {
     context.save();
     context.translate(x, y);
     
+    context.rotate((isP1 ? 0 : Math.PI));
     context.rotate(destDirection);
 
     
@@ -97,22 +107,24 @@ class Ship {
     // health bar
     context.save();
     context.translate(x, y);
-    context.lineWidth = 3;
+    context.lineWidth = 2;
     context.strokeStyle = "black";
     context.fillStyle = "black";
     
     context.beginPath();
-    context.moveTo(0 -10, -9);
-    context.lineTo(0 + 10, -9);
-    context.closePath();
+    //context.moveTo(0 -10, -9);
+    //context.lineTo(0 + 10, -9);
+context.arc(0, 0, 15, Math.PI / 5, (4 * Math.PI / 5) * ((shipHealth + 20) / 120.0), false);
+    //context.closePath();
     context.stroke();
     
-    context.lineWidth = 2.5;
+    context.lineWidth = 1.5;
     context.strokeStyle = "green";
     context.beginPath();
-    context.moveTo(0 -10, -9);
-    context.lineTo(shipHealth / 5.0 - 10.0, -9);
-    context.closePath();
+    //context.moveTo(0 -10, -9);
+    //context.lineTo(shipHealth / 5.0 - 10.0, -9);
+context.arc(0, 0, 15, Math.PI / 5, (4 * Math.PI / 5) * ((shipHealth + 20) / 120.0), false);
+    //context.closePath();
     context.stroke();
     
     

@@ -21,6 +21,7 @@ num numCols = 10;
 List<List<Hex>> hexes;
 List<List<Hex>> hexesP2;
 List<Ship> shipsP1;
+List<Ship> shipsP2;
 List<PlanetaryBody> planets;
 List<Missile> missiles;
 
@@ -35,6 +36,7 @@ void main() {
   hexes = [];
   hexesP2 = [];
   shipsP1 = [];
+  shipsP2 = [];
   planets = [];
   missiles = [];
   
@@ -62,8 +64,15 @@ void main() {
     }
   }
   
-  shipsP1.add(new Ship(3, 0, 3));
-  shipsP1.add(new Ship(2, 0, 3));
+  shipsP1.add(new Ship(3, 0, 3, true));
+  shipsP1.add(new Ship(2, 0, 3, true));
+  
+  
+  var random = new Math.Random();
+  shipsP2.add(new Ship(random.nextInt(numRows), random.nextInt(numCols), 3, false));
+  shipsP2.add(new Ship(random.nextInt(numRows), random.nextInt(numCols), 3, false));
+  shipsP2.add(new Ship(random.nextInt(numRows), random.nextInt(numCols), 3, false));
+  shipsP2.add(new Ship(random.nextInt(numRows), random.nextInt(numCols), 3, false));
   
   canvas.parent.rect.then((ElementRect rect) {
     
@@ -270,6 +279,16 @@ void drawShips(CanvasRenderingContext2D context) {
       i++;
     }
   }
+  
+  i = 0;
+  for (Ship s in shipsP2) {
+    if(s.shipHealth <= 0.0) {
+      shipsP2.removeAt(i);
+    } else {    
+      s.draw(context);
+      i++;
+    }
+  }
 }
 
 void drawMissiles(CanvasRenderingContext2D context) {
@@ -301,6 +320,13 @@ void drawMissiles(CanvasRenderingContext2D context) {
     m.draw(context);
     
     for (Ship s in shipsP1) {
+      if (s.isIntersect(m.pos) && s != selectedShip) {
+        s.takeDamage(20.0);
+        missiles.removeAt(i);
+      }
+    }
+    
+    for (Ship s in shipsP2) {
       if (s.isIntersect(m.pos) && s != selectedShip) {
         s.takeDamage(20.0);
         missiles.removeAt(i);
