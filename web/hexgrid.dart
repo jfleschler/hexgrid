@@ -118,13 +118,6 @@ void main() {
         c.isSelected = true;
         selectedCard = c;
         
-        if (selectedShip != null) {
-          selectedShip.destDirection = 0.0;
-          selectedShip.isSelected = false;
-          selectedShip = null;
-          isAttacking = false;
-        }
-       
         if (c.cardType == "ship") {
           selectSpawnHex();
         }
@@ -132,6 +125,13 @@ void main() {
       } else {
         c.isSelected = false;
       }
+    }
+    
+    if (selectedShip != null) {
+      selectedShip.destDirection = 0.0;
+      selectedShip.isSelected = false;
+      selectedShip = null;
+      isAttacking = false;
     }
     
     if (!didSelectCard) {

@@ -107,7 +107,7 @@ class Ship {
     // health bar
     context.save();
     context.translate(x, y);
-    context.lineWidth = 2;
+    context.lineWidth = 3.5;
     context.strokeStyle = "black";
     context.fillStyle = "black";
     
@@ -118,8 +118,14 @@ class Ship {
     //context.closePath();
     context.stroke();
     
-    context.lineWidth = 1.5;
-    context.strokeStyle = "green";
+    context.lineWidth = 2;
+    if (shipHealth > 60)
+      context.strokeStyle = "green";
+    else if (shipHealth >= 40)
+      context.strokeStyle = "yellow";
+    else
+      context.strokeStyle = "red";
+
     context.beginPath();
     //context.moveTo(0 -10, -9);
     //context.lineTo(shipHealth / 5.0 - 10.0, -9);

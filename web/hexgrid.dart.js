@@ -1226,7 +1226,7 @@ $$.Ship = {"": ["pos?", "destPos", "isP1", "isSelected=", "isMoving?", "destDire
   context.restore$0();
   context.save$0();
   context.translate$2(x, y);
-  context.set$lineWidth(2);
+  context.set$lineWidth(3.5);
   context.set$strokeStyle('black');
   context.set$fillStyle('black');
   context.beginPath$0();
@@ -1235,13 +1235,18 @@ $$.Ship = {"": ["pos?", "destPos", "isP1", "isSelected=", "isMoving?", "destDire
     throw $.iae(t1);
   context.arc$6(0, 0, 15, 2.5132741228718345 * (1 - t1) + 0.6283185307179586, 2.5132741228718345, false);
   context.stroke$0();
-  context.set$lineWidth(1.5);
-  context.set$strokeStyle('green');
+  context.set$lineWidth(2);
+  if ($.gtB(this.shipHealth, 60))
+    context.set$strokeStyle('green');
+  else if ($.geB(this.shipHealth, 40))
+    context.set$strokeStyle('yellow');
+  else
+    context.set$strokeStyle('red');
   context.beginPath$0();
-  var t2 = $.div($.add(this.shipHealth, 20), 120);
-  if (typeof t2 !== 'number')
-    throw $.iae(t2);
-  context.arc$6(0, 0, 15, 2.5132741228718345 * (1 - t2) + 0.6283185307179586, 2.5132741228718345, false);
+  t1 = $.div($.add(this.shipHealth, 20), 120);
+  if (typeof t1 !== 'number')
+    throw $.iae(t1);
+  context.arc$6(0, 0, 15, 2.5132741228718345 * (1 - t1) + 0.6283185307179586, 2.5132741228718345, false);
   context.stroke$0();
   context.restore$0();
 },
@@ -2637,17 +2642,17 @@ $$.main_anon = {"": [],
       $.didSelectCard = true;
       t2.set$isSelected(true);
       $.selectedCard = t2;
-      var t3 = $.selectedShip;
-      if (!(t3 == null)) {
-        t3.set$destDirection(0);
-        t3.set$isSelected(false);
-        $.selectedShip = null;
-        $.isAttacking = false;
-      }
       if ($.eqB(t2.get$cardType(), 'ship'))
         $.selectSpawnHex();
     } else
       t2.set$isSelected(false);
+  }
+  t1 = $.selectedShip;
+  if (!(t1 == null)) {
+    t1.set$destDirection(0);
+    t1.set$isSelected(false);
+    $.selectedShip = null;
+    $.isAttacking = false;
   }
   if ($.didSelectCard !== true) {
     $.selectedCard = null;
