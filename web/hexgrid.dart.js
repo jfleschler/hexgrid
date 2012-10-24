@@ -4080,7 +4080,6 @@ $.drawPlanets = function(context) {
       var t4 = t3.next$0();
       var dist = $.sub(t4.get$pos(), t2.get$pos());
       if (!$.eqB(t2, t4) && $.leB($.get$length(dist), $.add(t2.get$bodySize(), t4.get$bodySize()))) {
-        $.window().alert$1('bump');
         var revDist = $.sub(t2.get$pos(), t4.get$pos());
         t4.set$vel($.mul(dist.normalize$0(), $.vec2$(0.2, 0.2)));
         t2.set$vel($.mul(revDist.normalize$0(), $.vec2$(0.2, 0.2)));
@@ -4828,13 +4827,6 @@ $._DoubleLinkedQueueEntrySentinel$ = function() {
   return t1;
 };
 
-$.addLast = function(receiver, value) {
-  if (!$.isJsArray(receiver))
-    return receiver.addLast$1(value);
-  $.checkGrowable(receiver, 'addLast');
-  receiver.push(value);
-};
-
 $.lt$slow = function(a, b) {
   if ($.checkNumbers(a, b))
     return a < b;
@@ -4873,6 +4865,13 @@ $.toString = function(value) {
   if (typeof value == "function")
     return 'Closure';
   return String(value);
+};
+
+$.addLast = function(receiver, value) {
+  if (!$.isJsArray(receiver))
+    return receiver.addLast$1(value);
+  $.checkGrowable(receiver, 'addLast');
+  receiver.push(value);
 };
 
 $.removeLast = function(receiver) {
@@ -7603,9 +7602,6 @@ $.$defineNativeClass('DOMWindow', {"": [],
 },
  $dom_addEventListener$3: function(type, listener, useCapture) {
   return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
-},
- alert$1: function(message) {
-  return this.alert(message);
 },
  moveTo$2: function(x, y) {
   return this.moveTo(x,y);
