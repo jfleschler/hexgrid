@@ -952,14 +952,14 @@ $$.Hex = {"": ["pos?", "hexID?", "size", "isSelected="],
 }
 };
 
-$$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!", "shipHealth?", "row?", "col?", "hexSize"],
+$$.Ship = {"": ["pos?", "destPos", "isP1", "isSelected=", "isMoving?", "destDirection!", "shipHealth?", "hexStart", "row?", "col?", "hexSize"],
  "super": "Object",
  moveTo$2: function(_row, _col) {
   this.row = _row;
   this.col = _col;
   var t1 = this.col;
   if (typeof t1 !== 'number')
-    return this.moveTo$2$bailout(1, t1, 0, 0);
+    return this.moveTo$2$bailout(1, t1, 0, 0, 0);
   if ($.mod(t1, 2) === 1) {
     t1 = this.hexSize;
     if (typeof t1 !== 'number')
@@ -968,33 +968,41 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
   } else
     yOffset = 0;
   this.isMoving = true;
-  t1 = this.col;
+  t1 = this.hexStart;
   if (typeof t1 !== 'number')
-    return this.moveTo$2$bailout(2, yOffset, t1, 0);
-  var t3 = this.hexSize;
+    return this.moveTo$2$bailout(2, yOffset, t1, 0, 0);
+  var t2 = this.isP1 === true;
+  var t3 = this.col;
+  if (typeof t3 !== 'number')
+    return this.moveTo$2$bailout(3, yOffset, t1, t3, t2);
+  if (t2)
+    t2 = t3;
+  else
+    t2 = -t3;
+  t3 = this.hexSize;
   if (typeof t3 !== 'number')
     throw $.iae(t3);
-  var t4 = 40 + t1 * (7 * t3);
-  var t5 = this.row;
-  if (typeof t5 !== 'number')
-    return this.moveTo$2$bailout(3, yOffset, t5, t4);
-  this.destPos = $.vec2$(t4, 20 + t5 * (20 * t3) + yOffset);
-  var t7 = this.destPos.get$y();
-  if (typeof t7 !== 'number')
-    return this.moveTo$2$bailout(4, t7, 0, 0);
-  var t9 = this.pos.get$y();
-  if (typeof t9 !== 'number')
-    return this.moveTo$2$bailout(5, t7, t9, 0);
-  t9 = t7 - t9;
-  t7 = this.destPos.get$x();
-  if (typeof t7 !== 'number')
-    return this.moveTo$2$bailout(6, t9, t7, 0);
-  var t12 = this.pos.get$x();
-  if (typeof t12 !== 'number')
-    return this.moveTo$2$bailout(7, t9, t7, t12);
-  this.destDirection = $.atan2(t9, t7 - t12);
+  t1 += t2 * (7 * t3);
+  var t4 = this.row;
+  if (typeof t4 !== 'number')
+    return this.moveTo$2$bailout(4, yOffset, t4, t1, 0);
+  this.destPos = $.vec2$(t1, 20 + t4 * (20 * t3) + yOffset);
+  var t6 = this.destPos.get$y();
+  if (typeof t6 !== 'number')
+    return this.moveTo$2$bailout(5, t6, 0, 0, 0);
+  var t8 = this.pos.get$y();
+  if (typeof t8 !== 'number')
+    return this.moveTo$2$bailout(6, t8, t6, 0, 0);
+  t8 = t6 - t8;
+  t6 = this.destPos.get$x();
+  if (typeof t6 !== 'number')
+    return this.moveTo$2$bailout(7, t8, t6, 0, 0);
+  var t11 = this.pos.get$x();
+  if (typeof t11 !== 'number')
+    return this.moveTo$2$bailout(8, t8, t6, t11, 0);
+  this.destDirection = $.atan2(t8, t6 - t11);
 },
- moveTo$2$bailout: function(state0, env0, env1, env2) {
+ moveTo$2$bailout: function(state0, env0, env1, env2, env3) {
   switch (state0) {
     case 1:
       t1 = env0;
@@ -1005,21 +1013,27 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
       break;
     case 3:
       yOffset = env0;
+      t1 = env1;
+      t3 = env2;
+      t2 = env3;
+      break;
+    case 4:
+      yOffset = env0;
       t4 = env1;
       t1 = env2;
       break;
-    case 4:
-      t7 = env0;
-      break;
     case 5:
       t7 = env0;
-      t9 = env1;
       break;
     case 6:
       t9 = env0;
       t7 = env1;
       break;
     case 7:
+      t9 = env0;
+      t7 = env1;
+      break;
+    case 8:
       t9 = env0;
       t7 = env1;
       t12 = env2;
@@ -1040,18 +1054,20 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
       } else
         yOffset = 0;
       this.isMoving = true;
-      t1 = this.col;
+      t1 = this.hexStart;
     case 2:
       state0 = 0;
-      var t3 = this.hexSize;
+      var t2 = this.isP1 === true;
+      var t3 = this.col;
+    case 3:
+      state0 = 0;
+      t2 = t2 ? t3 : $.neg(t3);
+      t3 = this.hexSize;
       if (typeof t3 !== 'number')
         throw $.iae(t3);
-      t1 = $.mul(t1, 7 * t3);
-      if (typeof t1 !== 'number')
-        throw $.iae(t1);
-      t1 = 40 + t1;
+      t1 = $.add(t1, $.mul(t2, 7 * t3));
       var t4 = this.row;
-    case 3:
+    case 4:
       state0 = 0;
       var t6 = this.hexSize;
       if (typeof t6 !== 'number')
@@ -1061,17 +1077,17 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
         throw $.iae(t4);
       this.destPos = $.vec2$(t1, 20 + t4 + yOffset);
       var t7 = this.destPos.get$y();
-    case 4:
+    case 5:
       state0 = 0;
       var t9 = this.pos.get$y();
-    case 5:
+    case 6:
       state0 = 0;
       t9 = $.sub(t7, t9);
       t7 = this.destPos.get$x();
-    case 6:
+    case 7:
       state0 = 0;
       var t12 = this.pos.get$x();
-    case 7:
+    case 8:
       state0 = 0;
       this.destDirection = $.atan2(t9, $.sub(t7, t12));
   }
@@ -1173,6 +1189,7 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
   }
   context.save$0();
   context.translate$2(x, y);
+  context.rotate$1(this.isP1 === true ? 0 : 3.141592653589793);
   context.rotate$1(this.destDirection);
   context.beginPath$0();
   context.moveTo$2(-10, -6);
@@ -1185,20 +1202,16 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
   context.restore$0();
   context.save$0();
   context.translate$2(x, y);
-  context.set$lineWidth(3);
+  context.set$lineWidth(2);
   context.set$strokeStyle('black');
   context.set$fillStyle('black');
   context.beginPath$0();
-  context.moveTo$2(-10, -9);
-  context.lineTo$2(10, -9);
-  context.closePath$0();
+  context.arc$6(0, 0, 15, 0.6283185307179586, 2.5132741228718345 * ((this.shipHealth + 20) / 120), false);
   context.stroke$0();
-  context.set$lineWidth(2.5);
+  context.set$lineWidth(1.5);
   context.set$strokeStyle('green');
   context.beginPath$0();
-  context.moveTo$2(-10, -9);
-  context.lineTo$2(this.shipHealth / 5 - 10, -9);
-  context.closePath$0();
+  context.arc$6(0, 0, 15, 0.6283185307179586, 2.5132741228718345 * ((this.shipHealth + 20) / 120), false);
   context.stroke$0();
   context.restore$0();
 },
@@ -1241,11 +1254,16 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
  takeDamage$1: function(dmg) {
   this.shipHealth = this.shipHealth - dmg;
 },
- Ship$3: function(_row, _col, _hexSize) {
+ Ship$4: function(_row, _col, _hexSize, _isP1) {
   this.row = _row;
   this.col = _col;
   this.hexSize = _hexSize;
+  this.isP1 = _isP1;
   this.shipHealth = 100;
+  if (this.isP1 === true)
+    this.hexStart = 40;
+  else
+    this.hexStart = $.sub($.canvas.get$width(), 40);
   if ($.eqB($.mod(this.col, 2), 1)) {
     var t1 = this.hexSize;
     if (typeof t1 !== 'number')
@@ -1253,22 +1271,22 @@ $$.Ship = {"": ["pos?", "destPos", "isSelected=", "isMoving?", "destDirection!",
     var yOffset = 10 * t1;
   } else
     yOffset = 0;
-  t1 = this.col;
-  var t2 = this.hexSize;
-  if (typeof t2 !== 'number')
-    throw $.iae(t2);
-  t1 = $.mul(t1, 7 * t2);
-  if (typeof t1 !== 'number')
-    throw $.iae(t1);
-  t1 = 40 + t1;
-  var t3 = this.row;
-  var t4 = this.hexSize;
-  if (typeof t4 !== 'number')
-    throw $.iae(t4);
-  t3 = $.mul(t3, 20 * t4);
+  t1 = this.hexStart;
+  var t2 = this.isP1 === true;
+  var t3 = this.col;
+  t2 = t2 ? t3 : $.neg(t3);
+  t3 = this.hexSize;
   if (typeof t3 !== 'number')
     throw $.iae(t3);
-  this.pos = $.vec2$(t1, 20 + t3 + yOffset);
+  t1 = $.add(t1, $.mul(t2, 7 * t3));
+  var t4 = this.row;
+  var t5 = this.hexSize;
+  if (typeof t5 !== 'number')
+    throw $.iae(t5);
+  t4 = $.mul(t4, 20 * t5);
+  if (typeof t4 !== 'number')
+    throw $.iae(t4);
+  this.pos = $.vec2$(t1, 20 + t4 + yOffset);
   this.destPos = null;
   this.isMoving = false;
   this.isSelected = false;
@@ -1801,9 +1819,9 @@ $$._VariableSizeListIterator = {"": [],
 $$._Random = {"": [],
  "super": "Object",
  nextInt$1: function(max) {
-  if (max < 0)
+  if ($.ltB(max, 0))
     throw $.$$throw($.ArgumentError$('negative max: ' + $.S(max)));
-  if (max > 4294967295)
+  if ($.gtB(max, 4294967295))
     max = 4294967295;
   return (Math.random() * max) >>> 0;
 },
@@ -1816,6 +1834,9 @@ $$.vec2 = {"": ["x=", "y="],
  "super": "Object",
  toString$0: function() {
   return $.S(this.x) + ',' + $.S(this.y);
+},
+ negate$0: function() {
+  return $.vec2$($.neg(this.x), $.neg(this.y));
 },
  operator$sub$1: function(other) {
   var t1 = this.x;
@@ -2020,6 +2041,9 @@ $$.vec3 = {"": ["x=", "y=", "z="],
  "super": "Object",
  toString$0: function() {
   return $.S(this.x) + ',' + $.S(this.y) + ',' + $.S(this.z);
+},
+ negate$0: function() {
+  return $.vec3$($.neg(this.x), $.neg(this.y), $.neg(this.z));
 },
  operator$sub$1: function(other) {
   return $.vec3$($.sub(this.x, other.get$x()), $.sub(this.y, other.get$y()), $.sub(this.z, other.get$z()));
@@ -2227,6 +2251,9 @@ $$.vec4 = {"": ["x=", "y=", "z=", "w="],
  "super": "Object",
  toString$0: function() {
   return $.S(this.x) + ',' + $.S(this.y) + ',' + $.S(this.z) + ',' + $.S(this.w);
+},
+ negate$0: function() {
+  return $.vec4$($.neg(this.x), $.neg(this.y), $.neg(this.z), $.neg(this.w));
 },
  operator$sub$1: function(other) {
   return $.vec4$($.sub(this.x, other.get$x()), $.sub(this.y, other.get$y()), $.sub(this.z, other.get$z()), $.sub(this.w, other.get$w()));
@@ -3498,6 +3525,13 @@ $.drawMissiles = function(context) {
         $.removeAt$1($.missiles, i);
       }
     }
+    for (t3 = $.iterator($.shipsP2); t3.hasNext$0() === true;) {
+      t4 = t3.next$0();
+      if (t4.isIntersect$1(t2.get$pos()) === true && !$.eqB(t4, $.selectedShip)) {
+        t4.takeDamage$1(20);
+        $.removeAt$1($.missiles, i);
+      }
+    }
     if ($.gtB(t2.get$pos().get$x(), $.canvas.get$width()) || $.ltB(t2.get$pos().get$x(), 0) || $.gtB(t2.get$pos().get$y(), $.add($.canvas.get$height(), 50)) || $.ltB(t2.get$pos().get$y(), -50))
       $.removeAt$1($.missiles, i);
     else
@@ -3561,9 +3595,9 @@ $.shr = function(a, b) {
   return a.operator$shr$1(b);
 };
 
-$.Ship$ = function(_row, _col, _hexSize) {
-  var t1 = new $.Ship(null, null, null, null, null, null, null, null, null);
-  t1.Ship$3(_row, _col, _hexSize);
+$.Ship$ = function(_row, _col, _hexSize, _isP1) {
+  var t1 = new $.Ship(null, null, null, null, null, null, null, null, null, null, null);
+  t1.Ship$4(_row, _col, _hexSize, _isP1);
   return t1;
 };
 
@@ -3708,6 +3742,12 @@ $.Hex$ = function(_id, _size, _pos) {
   var t1 = new $.Hex(null, null, null, null);
   t1.Hex$3(_id, _size, _pos);
   return t1;
+};
+
+$.neg = function(a) {
+  if (typeof a === "number")
+    return -a;
+  return a.negate$0();
 };
 
 $.Collections__emitCollection = function(c, result, visiting) {
@@ -3919,6 +3959,15 @@ $.drawShips = function(context) {
     var t2 = t1.next$0();
     if ($.leB(t2.get$shipHealth(), 0))
       $.removeAt$1($.shipsP1, i);
+    else {
+      t2.draw$1(context);
+      ++i;
+    }
+  }
+  for (t1 = $.iterator($.shipsP2), i = 0; t1.hasNext$0() === true;) {
+    t2 = t1.next$0();
+    if ($.leB(t2.get$shipHealth(), 0))
+      $.removeAt$1($.shipsP2, i);
     else {
       t2.draw$1(context);
       ++i;
@@ -4199,6 +4248,7 @@ $.main = function() {
   $.hexes = [];
   $.hexesP2 = [];
   $.shipsP1 = [];
+  $.shipsP2 = [];
   $.planets = [];
   $.missiles = [];
   $.isAttacking = false;
@@ -4223,8 +4273,13 @@ $.main = function() {
       $.add$1($.index($.hexesP2, row), newHex2);
     }
   }
-  $.add$1($.shipsP1, $.Ship$(3, 0, 3));
-  $.add$1($.shipsP1, $.Ship$(2, 0, 3));
+  $.add$1($.shipsP1, $.Ship$(3, 0, 3, true));
+  $.add$1($.shipsP1, $.Ship$(2, 0, 3, true));
+  var random = $.Random_Random(null);
+  $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
+  $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
+  $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
+  $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
   $.canvas.get$parent().get$rect().then$1(new $.main_anon());
   $.add$1($.canvas.get$on().get$doubleClick(), new $.main_anon0());
   $.add$1($.canvas.get$on().get$mouseMove(), new $.main_anon1());
@@ -4452,7 +4507,7 @@ $.LinkedHashMapImplementation$ = function() {
 };
 
 $.Random_Random = function(seed) {
-  return $.CTC21;
+  return $.CTC20;
 };
 
 $.regExpGetNative = function(regExp) {
@@ -5494,7 +5549,7 @@ $.CTC33 = 'structured clone of other type';
 $.CTC11 = new Isolate.$isolateProperties.NotImplementedException('structured clone of other type');
 $.CTC34 = '^#[_a-zA-Z]\\w*$';
 $.CTC35 = false;
-$.CTC20 = new Isolate.$isolateProperties.JSSyntaxRegExp('^#[_a-zA-Z]\\w*$', false, false);
+$.CTC21 = new Isolate.$isolateProperties.JSSyntaxRegExp('^#[_a-zA-Z]\\w*$', false, false);
 $.CTC22 = new Isolate.$isolateProperties.Object();
 $.CTC36 = 'Incorrect number or type of arguments';
 $.CTC18 = new Isolate.$isolateProperties._ExceptionImplementation('Incorrect number or type of arguments');
@@ -5515,7 +5570,7 @@ $.CTC44 = 'structured clone of Date';
 $.CTC4 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Date');
 $.CTC45 = 'structured clone of ArrayBuffer';
 $.CTC9 = new Isolate.$isolateProperties.NotImplementedException('structured clone of ArrayBuffer');
-$.CTC21 = new Isolate.$isolateProperties._Random();
+$.CTC20 = new Isolate.$isolateProperties._Random();
 $.CTC17 = new Isolate.$isolateProperties.IllegalAccessException();
 $.CTC46 = 'structured clone of Blob';
 $.CTC7 = new Isolate.$isolateProperties.NotImplementedException('structured clone of Blob');
@@ -5527,6 +5582,7 @@ $.CTC = new Isolate.$isolateProperties.UnsupportedOperationException('Cannot add
 $.CTC14 = new Isolate.$isolateProperties.EmptyQueueException();
 $.attackVector = null;
 $._pendingRequests = null;
+$.shipsP2 = null;
 $.HashMapImplementation__INITIAL_CAPACITY = 8;
 $.hexesP2 = null;
 $.PI = 3.141592653589793;
@@ -6286,7 +6342,7 @@ $.$defineNativeClass('HTMLDocument', {"": [],
   return this.querySelector(selectors);
 },
  query$1: function(selectors) {
-  if ($.CTC20.hasMatch$1(selectors) === true)
+  if ($.CTC21.hasMatch$1(selectors) === true)
     return this.$dom_getElementById$1($.substring$1(selectors, 1));
   return this.$dom_querySelector$1(selectors);
 }
