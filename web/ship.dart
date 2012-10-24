@@ -127,7 +127,6 @@ class Ship {
     //context.closePath();
     context.stroke();
     
-    
     context.restore();
     
   }
