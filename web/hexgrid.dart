@@ -96,7 +96,8 @@ void main() {
   
   random = new Math.Random();
 
-  for(num i = 0; i < random.nextInt(5) + 1; i++){
+  num numPlanets = random.nextInt(5);
+  for(num i = 0; i < numPlanets + 1; i++){
     num newX = (maxX - minX) * random.nextDouble() + minX;
     num newY = canvas.height * random.nextDouble();
     
@@ -104,7 +105,8 @@ void main() {
     planets.add(new PlanetaryBody("Sun", "#ff2", random.nextInt(20), pt));
   }
   
-  for(num i = 0; i < random.nextInt(7) + 1; i++){
+  num numAsteroids = random.nextInt(15);
+  for(num i = 0; i < numAsteroids + 1; i++){
     num newX = (maxX - minX) * random.nextDouble() + minX;
     num newY = canvas.height * random.nextDouble();
     
@@ -363,9 +365,12 @@ void drawPlanets(CanvasRenderingContext2D context) {
     a.draw(context);
     
     for (Asteroid a2 in asteroids) {
-      vec2 dist = a2.pos- a.pos;
+      vec2 dist = a2.pos - a.pos;
       if (a != a2 && dist.length <= a.bodySize + a2.bodySize) {
-        a2.vel = a.vel * new vec2(2,2);
+        window.alert("bump");
+        vec2 revDist = a.pos - a2.pos;
+        a2.vel = dist.normalize() * new vec2(0.2,0.2); // * new vec2(2,2);
+        a.vel = revDist.normalize() * new vec2(0.2,0.2);
       }
     }
     

@@ -1557,20 +1557,13 @@ $$.Asteroid = {"": ["pos?", "vel=", "bodySize?"],
   return $.mul($.log($.add(r, 1), null), 10);
 },
  draw$1: function(context) {
-  var t1 = this.vel;
+  var t1 = this.pos;
   if (typeof t1 !== 'number')
     return this.draw$1$bailout(1, context, t1, 0);
-  var t3 = $.vec2$(0.99, 0.99);
+  var t3 = this.vel;
   if (typeof t3 !== 'number')
-    throw $.iae(t3);
-  this.vel = t1 * t3;
-  var t4 = this.pos;
-  if (typeof t4 !== 'number')
-    return this.draw$1$bailout(2, context, t4, 0);
-  var t6 = this.vel;
-  if (typeof t6 !== 'number')
-    return this.draw$1$bailout(3, context, t4, t6);
-  this.pos = t4 + t6;
+    return this.draw$1$bailout(2, context, t1, t3);
+  this.pos = t1 + t3;
   this.drawSelf$2(context, this.pos);
 },
  draw$1$bailout: function(state0, env0, env1, env2) {
@@ -1581,27 +1574,19 @@ $$.Asteroid = {"": ["pos?", "vel=", "bodySize?"],
       break;
     case 2:
       context = env0;
-      t3 = env1;
-      break;
-    case 3:
-      context = env0;
-      t3 = env1;
-      t5 = env2;
+      t1 = env1;
+      t3 = env2;
       break;
   }
   switch (state0) {
     case 0:
-      var t1 = this.vel;
+      var t1 = this.pos;
     case 1:
       state0 = 0;
-      this.vel = $.mul(t1, $.vec2$(0.99, 0.99));
-      var t3 = this.pos;
+      var t3 = this.vel;
     case 2:
       state0 = 0;
-      var t5 = this.vel;
-    case 3:
-      state0 = 0;
-      this.pos = $.add(t3, t5);
+      this.pos = $.add(t1, t3);
       this.drawSelf$2(context, this.pos);
   }
 },
@@ -4094,8 +4079,12 @@ $.drawPlanets = function(context) {
     for (var t3 = $.iterator($.asteroids); t3.hasNext$0() === true;) {
       var t4 = t3.next$0();
       var dist = $.sub(t4.get$pos(), t2.get$pos());
-      if (!$.eqB(t2, t4) && $.leB($.get$length(dist), $.add(t2.get$bodySize(), t4.get$bodySize())))
-        t4.set$vel($.mul(t2.get$vel(), $.vec2$(2, 2)));
+      if (!$.eqB(t2, t4) && $.leB($.get$length(dist), $.add(t2.get$bodySize(), t4.get$bodySize()))) {
+        $.window().alert$1('bump');
+        var revDist = $.sub(t2.get$pos(), t4.get$pos());
+        t4.set$vel($.mul(dist.normalize$0(), $.vec2$(0.2, 0.2)));
+        t2.set$vel($.mul(revDist.normalize$0(), $.vec2$(0.2, 0.2)));
+      }
     }
     for (t3 = $.iterator($.shipsP1); t3.hasNext$0() === true;) {
       t4 = t3.next$0();
@@ -4538,21 +4527,27 @@ $.main = function() {
   $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
   var minX = $.div($.canvas.get$width(), 4);
   if (typeof minX !== 'number')
-    return $.main$bailout(1, minX);
+    return $.main$bailout(1, minX, 0, 0, 0);
   var maxX = minX * 3;
   var random0 = $.Random_Random(null);
-  for (var t1 = maxX - minX, i = 0; $.ltB(i, $.add(random0.nextInt$1(5), 1)); ++i) {
-    t2 = random0.nextDouble$0();
-    if (typeof t2 !== 'number')
-      throw $.iae(t2);
-    var pt = $.vec2$(t1 * t2 + minX, $.mul($.canvas.get$height(), random0.nextDouble$0()));
+  var numPlanets = random0.nextInt$1(5);
+  if (typeof numPlanets !== 'number')
+    return $.main$bailout(2, minX, maxX, random0, numPlanets);
+  for (var t1 = numPlanets + 1, t2 = maxX - minX, i = 0; i < t1; ++i) {
+    t3 = random0.nextDouble$0();
+    if (typeof t3 !== 'number')
+      throw $.iae(t3);
+    var pt = $.vec2$(t2 * t3 + minX, $.mul($.canvas.get$height(), random0.nextDouble$0()));
     $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random0.nextInt$1(20), pt));
   }
-  for (i = 0; $.ltB(i, $.add(random0.nextInt$1(7), 1)); ++i) {
-    t2 = random0.nextDouble$0();
-    if (typeof t2 !== 'number')
-      throw $.iae(t2);
-    pt = $.vec2$(t1 * t2 + minX, $.mul($.canvas.get$height(), random0.nextDouble$0()));
+  var numAsteroids = random0.nextInt$1(15);
+  if (typeof numAsteroids !== 'number')
+    return $.main$bailout(3, numAsteroids, minX, maxX, random0);
+  for (t1 = numAsteroids + 1, i = 0; i < t1; ++i) {
+    t3 = random0.nextDouble$0();
+    if (typeof t3 !== 'number')
+      throw $.iae(t3);
+    pt = $.vec2$(t2 * t3 + minX, $.mul($.canvas.get$height(), random0.nextDouble$0()));
     $.add$1($.asteroids, $.Asteroid$(pt, random0.nextInt$1(2)));
   }
   $.add$1($.cardDeck, $.Card$('ship'));
@@ -4833,6 +4828,13 @@ $._DoubleLinkedQueueEntrySentinel$ = function() {
   return t1;
 };
 
+$.addLast = function(receiver, value) {
+  if (!$.isJsArray(receiver))
+    return receiver.addLast$1(value);
+  $.checkGrowable(receiver, 'addLast');
+  receiver.push(value);
+};
+
 $.lt$slow = function(a, b) {
   if ($.checkNumbers(a, b))
     return a < b;
@@ -4871,13 +4873,6 @@ $.toString = function(value) {
   if (typeof value == "function")
     return 'Closure';
   return String(value);
-};
-
-$.addLast = function(receiver, value) {
-  if (!$.isJsArray(receiver))
-    return receiver.addLast$1(value);
-  $.checkGrowable(receiver, 'addLast');
-  receiver.push(value);
 };
 
 $.removeLast = function(receiver) {
@@ -5674,25 +5669,96 @@ $.sub = function(a, b) {
   return typeof a === 'number' && typeof b === 'number' ? a - b : $.sub$slow(a, b);
 };
 
-$.main$bailout = function(state0, minX) {
-  var maxX = $.mul(minX, 3);
-  var random0 = $.Random_Random(null);
-  for (var i = 0; $.ltB(i, $.add(random0.nextInt$1(5), 1)); ++i) {
-    var pt = $.vec2$($.add($.mul($.sub(maxX, minX), random0.nextDouble$0()), minX), $.mul($.canvas.get$height(), random0.nextDouble$0()));
-    $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random0.nextInt$1(20), pt));
+$.main$bailout = function(state0, env0, env1, env2, env3) {
+  switch (state0) {
+    case 1:
+      minX = env0;
+      break;
+    case 2:
+      minX = env0;
+      maxX = env1;
+      random0 = env2;
+      numPlanets = env3;
+      break;
+    case 3:
+      numAsteroids = env0;
+      minX = env1;
+      maxX = env2;
+      random0 = env3;
+      break;
   }
-  for (i = 0; $.ltB(i, $.add(random0.nextInt$1(7), 1)); ++i) {
-    pt = $.vec2$($.add($.mul($.sub(maxX, minX), random0.nextDouble$0()), minX), $.mul($.canvas.get$height(), random0.nextDouble$0()));
-    $.add$1($.asteroids, $.Asteroid$(pt, random0.nextInt$1(2)));
+  switch (state0) {
+    case 0:
+      $.canvas = $.query('#container');
+      $.deckCanvas = $.query('#deck');
+      $.hexes = [];
+      $.hexesP2 = [];
+      $.shipsP1 = [];
+      $.shipsP2 = [];
+      $.planets = [];
+      $.asteroids = [];
+      $.missiles = [];
+      $.cardDeck = [];
+      $.isAttacking = false;
+      $.didSelectCard = false;
+      $.selectedCard = null;
+      $.selectedShip = null;
+      for (var yOffset = 0, row = 0; $.ltB(row, $.numRows); ++row) {
+        $.add$1($.hexes, $.ListImplementation_List(null));
+        $.add$1($.hexesP2, $.ListImplementation_List(null));
+        for (var t1 = 20 + row * 60, col = 0; $.ltB(col, $.numCols); ++col) {
+          yOffset = $.mod(col, 2) === 1 ? 30 : 0;
+          var t2 = $.numCols;
+          if (typeof t2 !== 'number')
+            throw $.iae(t2);
+          var t3 = row * t2 + col;
+          var t4 = col * 21;
+          var t5 = 40 + t4;
+          var t6 = t1 + yOffset;
+          var newHex = $.Hex$(t3, 3, $.vec2$(t5, t6));
+          $.add$1($.index($.hexes, row), newHex);
+          t3 = $.numCols;
+          if (typeof t3 !== 'number')
+            throw $.iae(t3);
+          var newHex2 = $.Hex$(row * t3 + col, 3, $.vec2$($.sub($.sub($.canvas.get$width(), 40), t4), t6));
+          $.add$1($.index($.hexesP2, row), newHex2);
+        }
+      }
+      $.add$1($.shipsP1, $.Ship$(3, 0, 3, true));
+      $.add$1($.shipsP1, $.Ship$(2, 0, 3, true));
+      var random = $.Random_Random(null);
+      $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
+      $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
+      $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
+      $.add$1($.shipsP2, $.Ship$(random.nextInt$1($.numRows), random.nextInt$1($.numCols), 3, false));
+      var minX = $.div($.canvas.get$width(), 4);
+    case 1:
+      state0 = 0;
+      var maxX = $.mul(minX, 3);
+      var random0 = $.Random_Random(null);
+      var numPlanets = random0.nextInt$1(5);
+    case 2:
+      state0 = 0;
+      for (var i = 0; $.ltB(i, $.add(numPlanets, 1)); ++i) {
+        var pt = $.vec2$($.add($.mul($.sub(maxX, minX), random0.nextDouble$0()), minX), $.mul($.canvas.get$height(), random0.nextDouble$0()));
+        $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random0.nextInt$1(20), pt));
+      }
+      var numAsteroids = random0.nextInt$1(15);
+    case 3:
+      state0 = 0;
+      for (i = 0; $.ltB(i, $.add(numAsteroids, 1)); ++i) {
+        pt = $.vec2$($.add($.mul($.sub(maxX, minX), random0.nextDouble$0()), minX), $.mul($.canvas.get$height(), random0.nextDouble$0()));
+        $.add$1($.asteroids, $.Asteroid$(pt, random0.nextInt$1(2)));
+      }
+      $.add$1($.cardDeck, $.Card$('ship'));
+      $.add$1($.cardDeck, $.Card$('ship'));
+      $.add$1($.cardDeck, $.Card$('ship'));
+      $.window().requestAnimationFrame$1($.draw);
+      $.add$1($.deckCanvas.get$on().get$mouseUp(), new $.main_anon());
+      $.add$1($.canvas.get$on().get$doubleClick(), new $.main_anon0());
+      $.add$1($.canvas.get$on().get$mouseMove(), new $.main_anon1());
+      $.add$1($.canvas.get$on().get$mouseUp(), new $.main_anon2());
   }
-  $.add$1($.cardDeck, $.Card$('ship'));
-  $.add$1($.cardDeck, $.Card$('ship'));
-  $.add$1($.cardDeck, $.Card$('ship'));
-  $.window().requestAnimationFrame$1($.draw);
-  $.add$1($.deckCanvas.get$on().get$mouseUp(), new $.main_anon());
-  $.add$1($.canvas.get$on().get$doubleClick(), new $.main_anon0());
-  $.add$1($.canvas.get$on().get$mouseMove(), new $.main_anon1());
-  $.add$1($.canvas.get$on().get$mouseUp(), new $.main_anon2());
 };
 
 $.drawShootPath$bailout = function(state0, env0, env1, env2, env3, env4) {
@@ -7537,6 +7603,9 @@ $.$defineNativeClass('DOMWindow', {"": [],
 },
  $dom_addEventListener$3: function(type, listener, useCapture) {
   return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
+},
+ alert$1: function(message) {
+  return this.alert(message);
 },
  moveTo$2: function(x, y) {
   return this.moveTo(x,y);

@@ -16,7 +16,7 @@ class Asteroid {
   }
   
   void draw(CanvasRenderingContext2D context) {
-    vel *= new vec2(0.99, 0.99);
+    //vel *= new vec2(0.99, 0.99);
     pos += vel;
     
     drawSelf(context, pos);
