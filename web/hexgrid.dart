@@ -367,7 +367,6 @@ void drawPlanets(CanvasRenderingContext2D context) {
     for (Asteroid a2 in asteroids) {
       vec2 dist = a2.pos - a.pos;
       if (a != a2 && dist.length <= a.bodySize + a2.bodySize) {
-        window.alert("bump");
         vec2 revDist = a.pos - a2.pos;
         a2.vel = dist.normalize() * new vec2(0.2,0.2); // * new vec2(2,2);
         a.vel = revDist.normalize() * new vec2(0.2,0.2);
