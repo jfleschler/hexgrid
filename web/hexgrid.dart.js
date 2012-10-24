@@ -1206,12 +1206,12 @@ $$.Ship = {"": ["pos?", "destPos", "isP1", "isSelected=", "isMoving?", "destDire
   context.set$strokeStyle('black');
   context.set$fillStyle('black');
   context.beginPath$0();
-  context.arc$6(0, 0, 15, 0.6283185307179586, 2.5132741228718345 * ((this.shipHealth + 20) / 120), false);
+  context.arc$6(0, 0, 15, 2.5132741228718345 * (1 - (this.shipHealth + 20) / 120) + 0.6283185307179586, 2.5132741228718345, false);
   context.stroke$0();
   context.set$lineWidth(1.5);
   context.set$strokeStyle('green');
   context.beginPath$0();
-  context.arc$6(0, 0, 15, 0.6283185307179586, 2.5132741228718345 * ((this.shipHealth + 20) / 120), false);
+  context.arc$6(0, 0, 15, 2.5132741228718345 * (1 - (this.shipHealth + 20) / 120) + 0.6283185307179586, 2.5132741228718345, false);
   context.stroke$0();
   context.restore$0();
 },
@@ -4987,7 +4987,7 @@ $.drawShootPath = function(_angle, _speed, pos, context) {
   if (typeof y !== 'number')
     return $.drawShootPath$bailout(2, vx, vy, context, y, x);
   var prevP = $.vec2$(0, 0);
-  for (var edgeDistance = 0, currentTime = 0.16666666666666666; currentTime < 100;) {
+  for (var edgeDistance = 0, currentTime = 0.16666666666666666; currentTime < 1000;) {
     x -= vx * 0.16666666666666666;
     y -= vy * 0.16666666666666666;
     currentTime += 0.16666666666666666;
@@ -5349,7 +5349,7 @@ $.drawShootPath$bailout = function(state0, env0, env1, env2, env3, env4) {
     case 2:
       state0 = 0;
       var prevP = $.vec2$(0, 0);
-      for (var edgeDistance = 0, currentTime = 0.16666666666666666; currentTime < 100;) {
+      for (var edgeDistance = 0, currentTime = 0.16666666666666666; currentTime < 1000;) {
         x = $.sub(x, vx * 0.16666666666666666);
         y = $.sub(y, vy * 0.16666666666666666);
         currentTime += 0.16666666666666666;

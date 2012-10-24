@@ -351,7 +351,7 @@ void drawShootPath(double _angle, double _speed, vec2 pos, CanvasRenderingContex
   num x = pos.x;
   num y = pos.y;
   double currentTime = deltaTime;
-  double totalTime = 100.0;
+  double totalTime = 1000.0;
 
   vec2 prevP = new vec2(0, 0);
   num edgeDistance = 0;

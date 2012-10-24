@@ -114,7 +114,7 @@ class Ship {
     context.beginPath();
     //context.moveTo(0 -10, -9);
     //context.lineTo(0 + 10, -9);
-context.arc(0, 0, 15, Math.PI / 5, (4 * Math.PI / 5) * ((shipHealth + 20) / 120.0), false);
+    context.arc(0, 0, 15, 4 * Math.PI / 5  * (1 - ((shipHealth + 20) / 120.0)) + Math.PI / 5, (4 * Math.PI / 5), false);
     //context.closePath();
     context.stroke();
     
@@ -123,7 +123,7 @@ context.arc(0, 0, 15, Math.PI / 5, (4 * Math.PI / 5) * ((shipHealth + 20) / 120.
     context.beginPath();
     //context.moveTo(0 -10, -9);
     //context.lineTo(shipHealth / 5.0 - 10.0, -9);
-context.arc(0, 0, 15, Math.PI / 5, (4 * Math.PI / 5) * ((shipHealth + 20) / 120.0), false);
+    context.arc(0, 0, 15, 4 * Math.PI / 5  * (1 - ((shipHealth + 20) / 120.0)) + Math.PI / 5, (4 * Math.PI / 5), false);
     //context.closePath();
     context.stroke();
     
