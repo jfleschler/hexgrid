@@ -4179,6 +4179,17 @@ $.drawPlanets = function(context) {
       if (t4.isIntersect$1(t2.get$pos()) === true)
         t4.takeDamage$1(100);
     }
+    if ($.gtB($.sub(t2.get$pos().get$y(), t2.get$bodySize()), context.get$canvas().get$height())) {
+      t3 = t2.get$bodySize();
+      if (typeof t3 !== 'number')
+        throw $.iae(t3);
+      t3 = 0 - t3;
+      t2.get$pos().set$y(t3);
+    }
+    if ($.ltB($.add(t2.get$pos().get$y(), t2.get$bodySize()), 0)) {
+      t3 = $.add(context.get$canvas().get$height(), t2.get$bodySize());
+      t2.get$pos().set$y(t3);
+    }
   }
   for (t1 = $.iterator($.planets); t1.hasNext$0() === true;)
     t1.next$0().draw$1(context);
@@ -4424,6 +4435,12 @@ $._TextTrackCueEventsImpl$ = function(_ptr) {
   return new $._TextTrackCueEventsImpl(_ptr);
 };
 
+$.isEmpty = function(receiver) {
+  if (typeof receiver === 'string' || $.isJsArray(receiver))
+    return receiver.length === 0;
+  return receiver.isEmpty$0();
+};
+
 $._SimpleClientRect$ = function(left, top$, width, height) {
   return new $._SimpleClientRect(left, top$, width, height);
 };
@@ -4434,12 +4451,6 @@ $.stringReplaceJS = function(receiver, replacer, to) {
 
 $.UnsupportedOperationException$ = function(_message) {
   return new $.UnsupportedOperationException(_message);
-};
-
-$.isEmpty = function(receiver) {
-  if (typeof receiver === 'string' || $.isJsArray(receiver))
-    return receiver.length === 0;
-  return receiver.isEmpty$0();
 };
 
 $._LocalWindowEventsImpl$ = function(_ptr) {

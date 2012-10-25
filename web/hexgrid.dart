@@ -379,6 +379,13 @@ void drawPlanets(CanvasRenderingContext2D context) {
       if (s.isIntersect(a.pos))
         s.takeDamage(100.0);
     }
+    
+    if (a.pos.y - a.bodySize > context.canvas.height) {
+      a.pos.y = 0 - a.bodySize;
+    }
+    if (a.pos.y + a.bodySize < 0) {
+      a.pos.y = context.canvas.height + a.bodySize;
+    }
   }
   for (PlanetaryBody p in planets) {
     p.draw(context);
