@@ -4,11 +4,14 @@ class Asteroid {
   vec2 vel;
   
   num bodySize;
+  num mass;
   
   Asteroid(vec2 _pos, num _bodySize) {
     pos = _pos;
     bodySize = normalizePlanetSize(_bodySize);
     vel = new vec2(0,0);
+    
+    mass = 10;
   }
   
   num normalizePlanetSize(num r) {

@@ -833,7 +833,7 @@ $$.MetaInfo = {"": ["_tag?", "_tags", "_set?"],
  "super": "Object"
 };
 
-$$.Hex = {"": ["pos?", "hexID?", "size", "isSelected="],
+$$.Hex = {"": ["pos=", "hexID?", "size", "isSelected="],
  "super": "Object",
  draw$1: function(context) {
   this.drawSelf$3(context, this.pos.get$x(), this.pos.get$y());
@@ -944,7 +944,7 @@ $$.Hex = {"": ["pos?", "hexID?", "size", "isSelected="],
 }
 };
 
-$$.Ship = {"": ["pos?", "destPos", "isP1", "isSelected=", "isMoving?", "destDirection!", "shipHealth?", "hexStart", "row?", "col?", "hexSize"],
+$$.Ship = {"": ["pos=", "destPos", "isP1", "isSelected=", "isMoving?", "destDirection!", "shipHealth?", "hexStart", "row?", "col?", "hexSize"],
  "super": "Object",
  moveTo$2: function(_row, _col) {
   this.row = _row;
@@ -1341,7 +1341,7 @@ $$.PlanetaryBody = {"": ["name", "color", "pos?", "bodySize?"],
 },
  draw$1: function(context) {
   var t1 = this.pos;
-  this.drawSelf$3(context, t1.x, t1.y);
+  this.drawSelf$3(context, t1.get$x(), t1.get$y());
 },
  drawSelf$3: function(context, x, y) {
   context.save$0();
@@ -1383,7 +1383,7 @@ $$.PlanetaryBody = {"": ["name", "color", "pos?", "bodySize?"],
 }
 };
 
-$$.Missile = {"": ["pos?", "lastPos", "velocity="],
+$$.Missile = {"": ["pos=", "lastPos", "velocity="],
  "super": "Object",
  draw$1: function(context) {
   var t1 = this.pos.get$x();
@@ -1475,7 +1475,7 @@ $$.Missile = {"": ["pos?", "lastPos", "velocity="],
 }
 };
 
-$$.Card = {"": ["pos?", "isSelected=", "cardType?"],
+$$.Card = {"": ["pos=", "isSelected=", "cardType?"],
  "super": "Object",
  draw$2: function(context, pos) {
   this.pos = pos;
@@ -1551,7 +1551,7 @@ $$.Card = {"": ["pos?", "isSelected=", "cardType?"],
 }
 };
 
-$$.Asteroid = {"": ["pos?", "vel=", "bodySize?"],
+$$.Asteroid = {"": ["pos=", "vel=", "bodySize?", "mass?"],
  "super": "Object",
  normalizePlanetSize$1: function(r) {
   return $.mul($.log($.add(r, 1), null), 10);
@@ -1653,6 +1653,7 @@ $$.Asteroid = {"": ["pos?", "vel=", "bodySize?"],
   this.pos = _pos;
   this.bodySize = this.normalizePlanetSize$1(_bodySize);
   this.vel = $.vec2$(0, 0);
+  this.mass = 10;
 }
 };
 
@@ -3808,6 +3809,92 @@ $.sqrt = function(x) {
   return Math.sqrt($.checkNum(x));
 };
 
+$.sqrt0 = function(arg, out) {
+  if (typeof arg === 'number')
+    return $.sqrt(arg);
+  if (typeof arg === 'object' && arg !== null && !!arg.is$vec2) {
+    if (out == null)
+      out = $.vec2$zero();
+    var t1 = $.sqrt(arg.x);
+    $.propertyTypeCast(out, 'is$vec2');
+    out.set$x(t1);
+    out.set$y($.sqrt(arg.y));
+    return out;
+  }
+  if (typeof arg === 'object' && arg !== null && !!arg.is$vec3) {
+    if (out == null)
+      out = $.vec3$zero();
+    t1 = $.sqrt(arg.x);
+    $.propertyTypeCast(out, 'is$vec3');
+    out.set$x(t1);
+    out.set$y($.sqrt(arg.y));
+    out.set$z($.sqrt(arg.z));
+    return out;
+  }
+  if (typeof arg === 'object' && arg !== null && !!arg.is$vec4) {
+    if (out == null)
+      out = $.vec4$zero();
+    t1 = $.sqrt(arg.x);
+    $.propertyTypeCast(out, 'is$vec4');
+    out.set$x(t1);
+    out.set$y($.sqrt(arg.y));
+    out.set$z($.sqrt(arg.z));
+    out.set$w($.sqrt(arg.w));
+    return out;
+  }
+  throw $.$$throw($.IllegalArgumentException$(arg));
+};
+
+$.collide_asteroids = function(a, b) {
+  var delta = $.sub(a.get$pos(), b.get$pos());
+  var distance_squared = $.vec2_dot(delta, delta);
+  var combined_radius = $.add(a.get$bodySize(), b.get$bodySize());
+  if ($.ltB($.mul(combined_radius, combined_radius), distance_squared))
+    return false;
+  var distance = $.sqrt0(distance_squared, null);
+  var collision_normal = $.vec2$($.div(delta.get$x(), distance), $.div(delta.get$y(), distance));
+  var intersection_depth = $.sub(combined_radius, distance);
+  if ($.leB(a.get$mass(), 1e-7))
+    var inverse_mass_a = 0;
+  else {
+    var t1 = a.get$mass();
+    if (typeof t1 !== 'number')
+      throw $.iae(t1);
+    inverse_mass_a = 1 / t1;
+  }
+  if ($.leB(b.get$mass(), 1e-7))
+    var inverse_mass_b = 0;
+  else {
+    t1 = b.get$mass();
+    if (typeof t1 !== 'number')
+      throw $.iae(t1);
+    inverse_mass_b = 1 / t1;
+  }
+  t1 = a.get$pos();
+  var t2 = collision_normal.x;
+  var t3 = $.mul(intersection_depth, inverse_mass_a);
+  var t4 = inverse_mass_a + inverse_mass_b;
+  a.set$pos($.add(t1, $.vec2$($.mul(t2, $.div(t3, t4)), $.mul(collision_normal.y, $.div($.mul(intersection_depth, inverse_mass_a), t4)))));
+  b.set$pos($.sub(b.get$pos(), $.vec2$($.mul(collision_normal.x, $.div($.mul(intersection_depth, inverse_mass_b), t4)), $.mul(collision_normal.y, $.div($.mul(intersection_depth, inverse_mass_b), t4)))));
+  var impact_speed = $.vec2_dot($.sub(a.get$vel(), b.get$vel()), collision_normal);
+  if ($.gtB(impact_speed, 0))
+    return true;
+  if (typeof impact_speed !== 'number')
+    throw $.iae(impact_speed);
+  var collision_impulse_magnitude = -1.7 * impact_speed / t4;
+  t1 = collision_normal.x;
+  if (typeof t1 !== 'number')
+    throw $.iae(t1);
+  t1 = collision_impulse_magnitude * t1;
+  t2 = collision_normal.y;
+  if (typeof t2 !== 'number')
+    throw $.iae(t2);
+  var collision_impulse = $.vec2$(t1, collision_impulse_magnitude * t2);
+  a.set$vel($.add(a.get$vel(), $.vec2$($.mul(collision_impulse.x, inverse_mass_a), $.mul(collision_impulse.y, inverse_mass_a))));
+  b.set$vel($.sub(b.get$vel(), $.vec2$($.mul(collision_impulse.x, inverse_mass_b), $.mul(collision_impulse.y, inverse_mass_b))));
+  return true;
+};
+
 $.shr = function(a, b) {
   if ($.checkNumbers(a, b)) {
     if (b < 0)
@@ -3921,7 +4008,7 @@ $._maybeScheduleMeasurementFrame = function() {
 };
 
 $.Asteroid$ = function(_pos, _bodySize) {
-  var t1 = new $.Asteroid(null, null, null);
+  var t1 = new $.Asteroid(null, null, null, null);
   t1.Asteroid$2(_pos, _bodySize);
   return t1;
 };
@@ -4078,12 +4165,9 @@ $.drawPlanets = function(context) {
     t2.draw$1(context);
     for (var t3 = $.iterator($.asteroids); t3.hasNext$0() === true;) {
       var t4 = t3.next$0();
-      var dist = $.sub(t4.get$pos(), t2.get$pos());
-      if (!$.eqB(t2, t4) && $.leB($.get$length(dist), $.add(t2.get$bodySize(), t4.get$bodySize()))) {
-        var revDist = $.sub(t2.get$pos(), t4.get$pos());
-        t4.set$vel($.mul(dist.normalize$0(), $.vec2$(0.2, 0.2)));
-        t2.set$vel($.mul(revDist.normalize$0(), $.vec2$(0.2, 0.2)));
-      }
+      var normal1 = $.sub(t4.get$pos(), t2.get$pos());
+      if (!$.eqB(t2, t4) && $.leB($.get$length(normal1), $.add(t2.get$bodySize(), t4.get$bodySize())))
+        $.collide_asteroids(t2, t4);
     }
     for (t3 = $.iterator($.shipsP1); t3.hasNext$0() === true;) {
       t4 = t3.next$0();
@@ -4539,15 +4623,15 @@ $.main = function() {
     var pt = $.vec2$(t2 * t3 + minX, $.mul($.canvas.get$height(), random0.nextDouble$0()));
     $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random0.nextInt$1(20), pt));
   }
-  var numAsteroids = random0.nextInt$1(15);
+  var numAsteroids = random0.nextInt$1(20);
   if (typeof numAsteroids !== 'number')
-    return $.main$bailout(3, numAsteroids, minX, maxX, random0);
+    return $.main$bailout(3, minX, maxX, random0, numAsteroids);
   for (t1 = numAsteroids + 1, i = 0; i < t1; ++i) {
     t3 = random0.nextDouble$0();
     if (typeof t3 !== 'number')
       throw $.iae(t3);
     pt = $.vec2$(t2 * t3 + minX, $.mul($.canvas.get$height(), random0.nextDouble$0()));
-    $.add$1($.asteroids, $.Asteroid$(pt, random0.nextInt$1(2)));
+    $.add$1($.asteroids, $.Asteroid$(pt, 1));
   }
   $.add$1($.cardDeck, $.Card$('ship'));
   $.add$1($.cardDeck, $.Card$('ship'));
@@ -4809,6 +4893,13 @@ $.DoubleLinkedQueue$ = function() {
   return t1;
 };
 
+$.addLast = function(receiver, value) {
+  if (!$.isJsArray(receiver))
+    return receiver.addLast$1(value);
+  $.checkGrowable(receiver, 'addLast');
+  receiver.push(value);
+};
+
 $.checkNumbers = function(a, b) {
   if (typeof a === 'number')
     if (typeof b === 'number')
@@ -4865,13 +4956,6 @@ $.toString = function(value) {
   if (typeof value == "function")
     return 'Closure';
   return String(value);
-};
-
-$.addLast = function(receiver, value) {
-  if (!$.isJsArray(receiver))
-    return receiver.addLast$1(value);
-  $.checkGrowable(receiver, 'addLast');
-  receiver.push(value);
 };
 
 $.removeLast = function(receiver) {
@@ -5387,6 +5471,10 @@ $.toStringForNativeObject = function(obj) {
   return 'Instance of ' + $.getTypeNameOf(obj);
 };
 
+$.vec2_dot = function(vector1, vector2) {
+  return $.add($.mul(vector1.get$x(), vector2.get$x()), $.mul(vector1.get$y(), vector2.get$y()));
+};
+
 $.dynamicBind = function(obj, name$, methods, arguments$) {
   var tag = $.getTypeNameOf(obj);
   var method = methods[tag];
@@ -5680,10 +5768,10 @@ $.main$bailout = function(state0, env0, env1, env2, env3) {
       numPlanets = env3;
       break;
     case 3:
-      numAsteroids = env0;
-      minX = env1;
-      maxX = env2;
-      random0 = env3;
+      minX = env0;
+      maxX = env1;
+      random0 = env2;
+      numAsteroids = env3;
       break;
   }
   switch (state0) {
@@ -5742,12 +5830,12 @@ $.main$bailout = function(state0, env0, env1, env2, env3) {
         var pt = $.vec2$($.add($.mul($.sub(maxX, minX), random0.nextDouble$0()), minX), $.mul($.canvas.get$height(), random0.nextDouble$0()));
         $.add$1($.planets, $.PlanetaryBody$('Sun', '#ff2', random0.nextInt$1(20), pt));
       }
-      var numAsteroids = random0.nextInt$1(15);
+      var numAsteroids = random0.nextInt$1(20);
     case 3:
       state0 = 0;
       for (i = 0; $.ltB(i, $.add(numAsteroids, 1)); ++i) {
         pt = $.vec2$($.add($.mul($.sub(maxX, minX), random0.nextDouble$0()), minX), $.mul($.canvas.get$height(), random0.nextDouble$0()));
-        $.add$1($.asteroids, $.Asteroid$(pt, random0.nextInt$1(2)));
+        $.add$1($.asteroids, $.Asteroid$(pt, 1));
       }
       $.add$1($.cardDeck, $.Card$('ship'));
       $.add$1($.cardDeck, $.Card$('ship'));

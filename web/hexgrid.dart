@@ -105,13 +105,13 @@ void main() {
     planets.add(new PlanetaryBody("Sun", "#ff2", random.nextInt(20), pt));
   }
   
-  num numAsteroids = random.nextInt(15);
+  num numAsteroids = random.nextInt(20);
   for(num i = 0; i < numAsteroids + 1; i++){
     num newX = (maxX - minX) * random.nextDouble() + minX;
     num newY = canvas.height * random.nextDouble();
     
     vec2 pt = new vec2(newX, newY);
-    asteroids.add(new Asteroid(pt, random.nextInt(2)));
+    asteroids.add(new Asteroid(pt, 1));
   }
   
   
@@ -365,11 +365,9 @@ void drawPlanets(CanvasRenderingContext2D context) {
     a.draw(context);
     
     for (Asteroid a2 in asteroids) {
-      vec2 dist = a2.pos - a.pos;
-      if (a != a2 && dist.length <= a.bodySize + a2.bodySize) {
-        vec2 revDist = a.pos - a2.pos;
-        a2.vel = dist.normalize() * new vec2(0.2,0.2); // * new vec2(2,2);
-        a.vel = revDist.normalize() * new vec2(0.2,0.2);
+      vec2 normal1 = a2.pos - a.pos;
+      if (a != a2 && normal1.length <= a.bodySize + a2.bodySize) {
+        collide_asteroids(a, a2);
       }
     }
     
@@ -558,6 +556,72 @@ void requestRedraw() {
   window.requestAnimationFrame(draw);
 }
 
+
+double vec2_dot(vec2 vector1, vec2 vector2) {
+   return vector1.x * vector2.x + vector1.y * vector2.y;
+}
+
+vec2 vec2_reflect(vec2 vector, vec2 normal) {
+  vec2 result = new vec2(0,0);
+  double dot;
+  
+  dot = vec2_dot(vector, normal);
+  result.x = 2 * dot * normal.x - vector.x;
+  result.y = 2 * dot * normal.y - vector.y;
+  return result;
+}
+
+bool collide_asteroids(Asteroid a, Asteroid b)
+{
+  // distance between asteroids (squared).
+  vec2 delta = (a.pos - b.pos);
+  double distance_squared = vec2_dot(delta, delta);
+
+  // radius of the asteroids.
+  double combined_radius = (a.bodySize + b.bodySize);
+  double combined_radius_squared = (combined_radius * combined_radius);
+
+  // object distance (squared) great than radius (squared). no collision.
+  if(combined_radius_squared < distance_squared)
+    return false;
+
+  // what is the direction of the collision
+  double distance = sqrt(distance_squared);
+  vec2 collision_normal = new vec2(delta.x / distance, delta.y / distance);
+
+  // how far the objects intersect
+  double intersection_depth = (combined_radius - distance);
+
+  // compute inverse of masses for both asteroids.
+  double inverse_mass_a = (a.mass <= 0.0000001)? 0.0 : 1.0 / a.mass;
+  double inverse_mass_b = (b.mass <= 0.0000001)? 0.0 : 1.0 / b.mass;
+
+  // separate asteroids so they stop intersecting
+  a.pos += new vec2(collision_normal.x * (intersection_depth * inverse_mass_a / (inverse_mass_a + inverse_mass_b)),
+                    collision_normal.y * (intersection_depth * inverse_mass_a / (inverse_mass_a + inverse_mass_b)));
+  b.pos -= new vec2(collision_normal.x * (intersection_depth * inverse_mass_b / (inverse_mass_a + inverse_mass_b)),
+                    collision_normal.y * (intersection_depth * inverse_mass_b / (inverse_mass_a + inverse_mass_b)));
+
+  // how hard the objects impact
+  vec2 combined_velocity = (a.vel - b.vel);
+  double impact_speed = vec2_dot(combined_velocity, collision_normal);
+
+  // object are moving away from each other. ignore collision response.
+  if(impact_speed > 0.0) 
+    return true;
+
+  // how much the asteroids should bounce off each other.    
+  const double collision_elasticity = 0.7;
+
+  // the instantaneous collision impulse.
+  double collision_impulse_magnitude = -(1.0 + collision_elasticity) * impact_speed / (inverse_mass_a + inverse_mass_b);
+  vec2 collision_impulse = new vec2(collision_impulse_magnitude * collision_normal.x, collision_impulse_magnitude * collision_normal.y);
+
+  // the change in momentum to each asteroids (change in velocity from collision).
+  a.vel += new vec2(collision_impulse.x * inverse_mass_a, collision_impulse.y * inverse_mass_a);
+  b.vel -= new vec2(collision_impulse.x * inverse_mass_b, collision_impulse.y * inverse_mass_b);
+  return true;
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 void showFps(num fps) {
