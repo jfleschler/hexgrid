@@ -123,6 +123,16 @@ void main() {
   requestRedraw();
   
   // EVENT HANDLERS
+  query("#body").on.keyUp.add((KeyboardEvent event) {
+    if(event.keyCode == 27 && isAttacking) {
+      isAttacking = false;
+      if (selectedShip != null) {
+        selectedShip.destDirection = 0.0;
+        selectedShip.isSelected = false;
+      }
+    }
+  });
+  
   deckCanvas.on.mouseUp.add((MouseEvent event) {
     event.preventDefault();
     vec2 pt = new vec2(event.clientX - deckCanvas.offsetLeft, event.clientY - deckCanvas.offsetTop);

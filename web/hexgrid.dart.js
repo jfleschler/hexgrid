@@ -1700,6 +1700,9 @@ $$._DocumentEventsImpl = {"": ["_ptr"],
  get$doubleClick: function() {
   return this.operator$index$1('dblclick');
 },
+ get$keyUp: function() {
+  return this.operator$index$1('keyup');
+},
  get$mouseMove: function() {
   return this.operator$index$1('mousemove');
 },
@@ -1726,6 +1729,9 @@ $$._ElementEventsImpl = {"": ["_ptr"],
  "super": "_EventsImpl",
  get$doubleClick: function() {
   return this.operator$index$1('dblclick');
+},
+ get$keyUp: function() {
+  return this.operator$index$1('keyup');
 },
  get$mouseMove: function() {
   return this.operator$index$1('mousemove');
@@ -1823,6 +1829,9 @@ $$._LocalWindowEventsImpl = {"": ["_ptr"],
  get$doubleClick: function() {
   return this.operator$index$1('dblclick');
 },
+ get$keyUp: function() {
+  return this.operator$index$1('keyup');
+},
  get$message: function() {
   return this.operator$index$1('message');
 },
@@ -1873,6 +1882,9 @@ $$._SVGElementInstanceEventsImpl = {"": ["_ptr"],
  "super": "_EventsImpl",
  get$doubleClick: function() {
   return this.operator$index$1('dblclick');
+},
+ get$keyUp: function() {
+  return this.operator$index$1('keyup');
 },
  get$mouseMove: function() {
   return this.operator$index$1('mousemove');
@@ -2739,6 +2751,20 @@ $$.vec4 = {"": ["x=", "y=", "z=", "w="],
 $$.main_anon = {"": [],
  "super": "Closure",
  call$1: function(event$) {
+  if ($.eqB(event$.get$keyCode(), 27) && $.isAttacking === true) {
+    $.isAttacking = false;
+    var t1 = $.selectedShip;
+    if (!(t1 == null)) {
+      t1.set$destDirection(0);
+      t1.set$isSelected(false);
+    }
+  }
+}
+};
+
+$$.main_anon0 = {"": [],
+ "super": "Closure",
+ call$1: function(event$) {
   event$.preventDefault$0();
   var pt = $.vec2$($.sub(event$.get$clientX(), $.deckCanvas.get$offsetLeft()), $.sub(event$.get$clientY(), $.deckCanvas.get$offsetTop()));
   $.didSelectCard = false;
@@ -2767,7 +2793,7 @@ $$.main_anon = {"": [],
 }
 };
 
-$$.main_anon0 = {"": [],
+$$.main_anon1 = {"": [],
  "super": "Closure",
  call$1: function(event$) {
   event$.preventDefault$0();
@@ -2790,7 +2816,7 @@ $$.main_anon0 = {"": [],
 }
 };
 
-$$.main_anon1 = {"": [],
+$$.main_anon2 = {"": [],
  "super": "Closure",
  call$1: function(event$) {
   if ($.isAttacking === true) {
@@ -2801,7 +2827,7 @@ $$.main_anon1 = {"": [],
 }
 };
 
-$$.main_anon2 = {"": [],
+$$.main_anon3 = {"": [],
  "super": "Closure",
  call$1: function(event$) {
   event$.preventDefault$0();
@@ -4652,10 +4678,11 @@ $.main = function() {
   $.add$1($.cardDeck, $.Card$('ship'));
   $.add$1($.cardDeck, $.Card$('ship'));
   $.window().requestAnimationFrame$1($.draw);
-  $.add$1($.deckCanvas.get$on().get$mouseUp(), new $.main_anon());
-  $.add$1($.canvas.get$on().get$doubleClick(), new $.main_anon0());
-  $.add$1($.canvas.get$on().get$mouseMove(), new $.main_anon1());
-  $.add$1($.canvas.get$on().get$mouseUp(), new $.main_anon2());
+  $.add$1($.query('#body').get$on().get$keyUp(), new $.main_anon());
+  $.add$1($.deckCanvas.get$on().get$mouseUp(), new $.main_anon0());
+  $.add$1($.canvas.get$on().get$doubleClick(), new $.main_anon1());
+  $.add$1($.canvas.get$on().get$mouseMove(), new $.main_anon2());
+  $.add$1($.canvas.get$on().get$mouseUp(), new $.main_anon3());
 };
 
 $._AbstractWorkerEventsImpl$ = function(_ptr) {
@@ -5856,10 +5883,11 @@ $.main$bailout = function(state0, env0, env1, env2, env3) {
       $.add$1($.cardDeck, $.Card$('ship'));
       $.add$1($.cardDeck, $.Card$('ship'));
       $.window().requestAnimationFrame$1($.draw);
-      $.add$1($.deckCanvas.get$on().get$mouseUp(), new $.main_anon());
-      $.add$1($.canvas.get$on().get$doubleClick(), new $.main_anon0());
-      $.add$1($.canvas.get$on().get$mouseMove(), new $.main_anon1());
-      $.add$1($.canvas.get$on().get$mouseUp(), new $.main_anon2());
+      $.add$1($.query('#body').get$on().get$keyUp(), new $.main_anon());
+      $.add$1($.deckCanvas.get$on().get$mouseUp(), new $.main_anon0());
+      $.add$1($.canvas.get$on().get$doubleClick(), new $.main_anon1());
+      $.add$1($.canvas.get$on().get$mouseMove(), new $.main_anon2());
+      $.add$1($.canvas.get$on().get$mouseUp(), new $.main_anon3());
   }
 };
 
@@ -9422,7 +9450,7 @@ $.$defineNativeClass('WebKitTransitionEvent', {"": []
 $.$defineNativeClass('TreeWalker', {"": []
 });
 
-$.$defineNativeClass('UIEvent', {"": []
+$.$defineNativeClass('UIEvent', {"": ["keyCode?"]
 });
 
 $.$defineNativeClass('HTMLUListElement', {"": []
