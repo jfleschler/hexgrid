@@ -361,6 +361,7 @@ void draw(int time) {
 }
 
 void drawPlanets(CanvasRenderingContext2D context) {
+  num i = 0;
   for (Asteroid a in asteroids) {
     a.draw(context);
     
@@ -385,6 +386,12 @@ void drawPlanets(CanvasRenderingContext2D context) {
     }
     if (a.pos.y + a.bodySize < 0) {
       a.pos.y = context.canvas.height + a.bodySize;
+    }
+    
+    if (a.pos.y > context.canvas.width || a.pos.x < 0) {
+      asteroids.removeAt(i);
+    } else {
+      i++;
     }
   }
   for (PlanetaryBody p in planets) {

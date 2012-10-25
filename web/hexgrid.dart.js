@@ -4160,7 +4160,7 @@ $._convertNativeToDart_IDBAny = function(object) {
 };
 
 $.drawPlanets = function(context) {
-  for (var t1 = $.iterator($.asteroids); t1.hasNext$0() === true;) {
+  for (var t1 = $.iterator($.asteroids), i = 0; t1.hasNext$0() === true;) {
     var t2 = t1.next$0();
     t2.draw$1(context);
     for (var t3 = $.iterator($.asteroids); t3.hasNext$0() === true;) {
@@ -4190,6 +4190,10 @@ $.drawPlanets = function(context) {
       t3 = $.add(context.get$canvas().get$height(), t2.get$bodySize());
       t2.get$pos().set$y(t3);
     }
+    if ($.gtB(t2.get$pos().get$y(), context.get$canvas().get$width()) || $.ltB(t2.get$pos().get$x(), 0))
+      $.removeAt$1($.asteroids, i);
+    else
+      ++i;
   }
   for (t1 = $.iterator($.planets); t1.hasNext$0() === true;)
     t1.next$0().draw$1(context);
