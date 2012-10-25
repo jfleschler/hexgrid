@@ -464,8 +464,7 @@ void drawMissiles(CanvasRenderingContext2D context) {
     for (Asteroid a in asteroids) {
       if (a.isIntersect(m.pos)) {
         missiles.removeAt(i);
-        a.vel += m.velocity.normalize();
-        
+        a.vel += (m.velocity.normalize() * new vec2(0.2,0.2));        
       }
     }
     

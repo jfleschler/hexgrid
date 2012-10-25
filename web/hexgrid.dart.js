@@ -3781,7 +3781,7 @@ $.drawMissiles = function(context) {
       t4 = t3.next$0();
       if (t4.isIntersect$1(t2.get$pos()) === true) {
         $.removeAt$1($.missiles, i);
-        t4.set$vel($.add(t4.get$vel(), t2.get$velocity().normalize$0()));
+        t4.set$vel($.add(t4.get$vel(), $.mul(t2.get$velocity().normalize$0(), $.vec2$(0.2, 0.2))));
       }
     }
     for (t3 = $.iterator($.shipsP1); t3.hasNext$0() === true;) {
